@@ -4,6 +4,6 @@ This version on RL-based assembly is using DQN to replace Q-learning in Bocicor 
 
 Once CNN requires images as inputs and this type of DQN requires a representation of an state as input, we transformed each state in the state space in a set of images containing one or two images. Bocicor et al proposed a state space where each state corresponds to a distinct arrange of reads with different amount of elements. It contains only one initial state, that represents the cenario where no read is present. As each read is incorporated, a new state emerge, composed by all reads used to reach the previous state and the last incorporated read (the action). 
 
-This implementation is able to represent each state in 5 different approaches, as described below:
+This implementation is able to represent each state in different approaches. All of them first find the exact match between each pair of subsequent reads in the corresponding state. Using these matches, an image is created where its height corresponds to the number of reads to be assembled and width is the maximum width of an image where all reads overlap in only one character (preffix and suffix). Each nucleotide (A, C, T, and G) is also represented using specific pixel values. Five approaches are available, as described below:
 
 1) Two images for each state: in this approach, 
