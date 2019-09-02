@@ -4,8 +4,14 @@ This version on RL-based assembly is using DQN to replace Q-learning in Bocicor 
 
 Once CNN requires images as inputs and this type of DQN requires a representation of an state as input, we transformed each state in the state space in a set of images containing one or two images. Bocicor et al proposed a state space where each state corresponds to a distinct arrange of reads with different amount of elements. It contains only one initial state, that represents the cenario where no read is present. As each read is incorporated, a new state emerge, composed by all reads used to reach the previous state and the last incorporated read (the action). 
 
-This implementation is able to represent each state in different approaches. All of them first find the exact match between each pair of subsequent reads in the corresponding state. Using these matches, an image is created where its height corresponds to the number of reads to be assembled and width is the maximum width of an image where all reads overlap in only one character (preffix and suffix). Each nucleotide (A, C, T, and G) is also represented using specific pixel values. Five approaches are available, as described below:
+This implementation is able to represent each state in different approaches. All of them first find the exact match between each pair of subsequent reads in the corresponding state. Using these matches, an image is created where its height corresponds to the number of reads to be assembled and width is the maximum width of an image where all reads overlap in only one character (preffix and suffix). Each nucleotide (A, C, T, and G) is also represented using specific pixel values. Five approaches are available, as briefly described below (a more comprehensive explanation is given here):
 
-1) Two images for each state: in this approach, each state is represented by one image containing the alignments considering the forward order of the reads of this state and by other image for the reverse order. For example, if state X represents the arrangement of four reads A1-A5-A9-A4, on that order, it will produce 2 images: (a) one for order A1-A5-A9-A4 and (b) another for order A4-A9-A5-A1
+1) Two images for each state: Each state is represented by one image containing the alignments considering the forward order of the reads of this state and by other image for the reverse order. For example, if state X represents the arrangement of four reads A1-A5-A9-A4, on that order, it will produce 2 images with the same width and height: (a) one for the forward order A1-A5-A9-A4 and (b) another for the reverse order A4-A9-A5-A1.
 
-2) 
+2) Largest image for each state: The two images produced in the previous approach are analyzed and only the image which contains the largest alignment.
+
+3) One merged image for each state: The two images produces in the first approach are merged in only one.
+
+4) One random image for each state: One out of the two images produces in the first approach is randomly selected.
+
+5) Only the forward image for each state: Only the forward image produced in the first approach is used to represent each state
