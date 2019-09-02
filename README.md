@@ -6,4 +6,6 @@ Once CNN requires images as inputs and this type of DQN requires a representatio
 
 This implementation is able to represent each state in different approaches. All of them first find the exact match between each pair of subsequent reads in the corresponding state. Using these matches, an image is created where its height corresponds to the number of reads to be assembled and width is the maximum width of an image where all reads overlap in only one character (preffix and suffix). Each nucleotide (A, C, T, and G) is also represented using specific pixel values. Five approaches are available, as described below:
 
-1) Two images for each state: in this approach, 
+1) Two images for each state: in this approach, each state is represented by one image containing the alignments considering the forward order of the reads of this state and by other image for the reverse order. For example, if state X represents the arrangement of four reads A1-A5-A9-A4, on that order, it will produce 2 images: 1) one for order A1-A5-A9-A4 and 2) another for order A4-A9-A5-A1
+
+2) 
