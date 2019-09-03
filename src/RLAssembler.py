@@ -140,7 +140,7 @@ def _setParams(param_tags, required_params, param_values, default_values):
 # verify if a value is valid for a given tag (command-line parameter)
 # return None if the value is incorrect
 def _checkParam(tag, value):
-    int_tags = ["episodes", "buffer_maxlen", "buffer_batch_size", "max_actions_per_episode", "threads"]
+    int_tags = ["episodes", "buffer_maxlen", "buffer_batch_size", "max_actions_per_episode", "threads", "gpu_enabled"]
     float_tags = ["swmatch", "swmismatch", "swgap"]
     perc_tags = ["gamma", "epsilon_min", "epsilon_decay", "epsilon"]
     if tag in int_tags:
