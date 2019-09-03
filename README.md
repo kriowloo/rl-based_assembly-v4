@@ -97,3 +97,5 @@ All source files are stored in *src* folder and were written in Python. There ar
    f) \_stateToCNN: method that receives an array that contains a grayscale image and transform it to be used as input to the CNN built
    g) train: method that actually implements DQN
    h) test: method used to watch the agent learning - through it, it is possible to ask the agent to take a number of actions to check how good was its previous learning
+
+4) **State2Image.py**: It contains an abstract class, that is base for 5 concrete classes and represents each state of the state space into an imagem. Since only some states (selected in *_replay* method) are actually used to train the CNN, it not necessary to store the whole pixel matrix of all images. So that, all images were initially represented compressed, being decompressed only if needed. This class is responsible for producing these compressed images, for decompressing them, and for optimize image generation in order to speed up implementation. Considering that each state can be represented in 5 different ways, there are 5 subclasses of State2Image (named 
