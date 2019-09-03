@@ -68,3 +68,5 @@ This implementation is able to represent each state in different approaches. All
    ```console
    user@host:~# python3 RLAssembler.py -e 10 -bm 2000 -g 0.95 -em 0.01 -ed 0.995 -bb 32 -m 0 -s 5 -gpu 1 ../data/experiment1.fasta
    ```
+**Documentation**
+
