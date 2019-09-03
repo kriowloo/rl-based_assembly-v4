@@ -1,5 +1,7 @@
 # rl-based_assembly-v4
 
+**Introduction**
+
 This version on RL-based assembly is using DQN to replace Q-learning in [Bocicor et al (2011)]( https://ieeexplore.ieee.org/document/6169520)<sup>1</sup> as an approach to DNA fragment assembly (DFA) problem. This DQN implementation is inspired on a published [manuscript of DeepMind](https://arxiv.org/abs/1312.5602)<sup>2</sup>, where DQN was firstly proposed by its researchers. It uses a convolutional neural network (CNN) with 2 convolutional layers followed by a fully connected layer which is connected to the output layer, that contains one output per each action of the RL model proposed in the aforementioned manuscript.
 
 Once CNN requires images as inputs and this type of DQN requires a representation of an state as input, we transformed each state in the state space in a set of images containing one or two images. Bocicor et al proposed a state space where each state corresponds to a distinct arrange of reads with different amount of elements. It contains only one initial state, that represents the cenario where no read is present. As each read is incorporated, a new state emerge, composed by all reads used to reach the previous state and the last incorporated read (the action). 
@@ -16,7 +18,7 @@ This implementation is able to represent each state in different approaches. All
 
 5) Only the forward image for each state: Only the forward image produced in the first approach is used to represent each state
 
-References:
+**References**
 
 \[1\] M. Bocicor, G. Czibula and I. Czibula, "A Reinforcement Learning Approach for Solving the Fragment Assembly Problem," 2011 *13th International Symposium on Symbolic and Numeric Algorithms for Scientific Computing*, Timisoara, 2011, pp. 191-198. doi: 10.1109/SYNASC.2011.9
 
