@@ -50,3 +50,5 @@ This implementation is able to represent each state in different approaches. All
    ```
    
    > Note: After typing git clone, your username and password will be prompted, since this is a private project.
+
+3) Access the folder where the source files were stored and run the software by using *RLAssembler* script
