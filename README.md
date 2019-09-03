@@ -72,5 +72,5 @@ This implementation is able to represent each state in different approaches. All
 
 All source files are stored in *src* folder and were written in Python. There are 10 source files in this folder, as described below:
 
-    1. RLAssembly.py: This source file is responsible for starting the application. It checks input parameters from user and start RL training if everything is properly configured, by creating an object of Environment - that basically controls current state and allows action taking - and another object of DFADeepQNetwork - the class where all DQN strategy is implemented to DFA problem.
-    2. 
+    1) RLAssembly.py: This source file is responsible for starting the application. It checks input parameters from user and start RL training if everything is properly configured, by creating an object of Environment - that basically controls current state and allows action taking - and another object of DFADeepQNetwork - the class where all DQN strategy is implemented to DFA problem.
+    2)
