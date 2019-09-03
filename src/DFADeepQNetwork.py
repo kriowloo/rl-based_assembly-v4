@@ -1,4 +1,4 @@
-from keras.models import Sequential
+from keras.models import Sequential 
 from keras.layers import Dense, Conv2D, Flatten, Lambda
 from keras.optimizers import RMSprop
 from numpy.random import randint, seed, rand
