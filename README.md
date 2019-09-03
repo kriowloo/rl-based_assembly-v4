@@ -40,14 +40,18 @@ This implementation is able to represent each state in different approaches. All
    - Keras (recommended version 2.1.6)
    
    
-   > Note: We recommend to run this software into a container, since it requires specific versions of some Python modules. There is a Docker image already configured with Ubuntu (~1GB) able to run it. However, if you prefer, Python requirements file is also available into *src* folder and can be used to install all required modules through *pip*. To run it inside a container from the aforementioned Docker image, just run *docker run --rm -it kpadovani/rlassembler-os:ubuntu*.
+   > Note: We recommend to run this software into a container, since it requires specific versions of some Python modules. There is a Docker image already configured with Ubuntu (~1GB) able to run it. However, if you prefer, Python requirements file is also available into *src* folder and can be used to install all required modules through *pip*. To run it inside a container from the aforementioned Docker image, just run the following command:
+   
+      ```console
+      user@host:~$ docker run --rm -it kpadovani/rlassembler-os:ubuntu
+      ```
 
 2) Clone this git repo (or manually download and extract files) into some folder (below, there is an example where git project is downloaded to the user's folder)
 
    ```console
-   user@host:~$ cd
-   user@host:~$ git clone https://github.com/kriowloo/rl-based_assembly-v4.git
-   user@host:~$ cd rl-based_assembly-v4
+   user@host:~# cd
+   user@host:~# git clone https://github.com/kriowloo/rl-based_assembly-v4.git
+   user@host:~# cd rl-based_assembly-v4
    ```
    
    > Note: After typing git clone, your username and password will be prompted, since this is a private project.
@@ -55,13 +59,13 @@ This implementation is able to represent each state in different approaches. All
 3) Run the software by using *RLAssembler.py* script (in *src* folder), setting up required parameters and providing the input file containing the reads to be assembled (in FASTA format). Run it without any parameters to see all parameter descriptions.
 
    ```console
-   user@host:~$ cd src
-   user@host:~$ python3 RLAssembler.py
+   user@host:~# cd src
+   user@host:~# python3 RLAssembler.py
    ```
 
    Below an example of execution using the example input file (named *experiment1.fasta* and stored in *data* folder), running for only 10 episodes on GPU and considering state representation number 5.
    
    ```console
-   user@host:~$ cd src   
-   user@host:~$ python3 RLAssembler.py -e 10 -bm 2000 -g 0.95 -em 0.01 -ed 0.995 -bb 32 -m 0 -s 5 -gpu 1 ../data/experiment1.fasta
+   user@host:~# cd src   
+   user@host:~# python3 RLAssembler.py -e 10 -bm 2000 -g 0.95 -em 0.01 -ed 0.995 -bb 32 -m 0 -s 5 -gpu 1 ../data/experiment1.fasta
    ```
