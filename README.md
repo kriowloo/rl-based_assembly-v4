@@ -48,3 +48,5 @@ This implementation is able to represent each state in different approaches. All
    user@host:~$ cd
    user@host:~$ git clone https://github.com/kriowloo/rl-based_assembly-v4.git
    ```
+   
+   > Note: After typing git clone, your username and password will be prompted, since this is a private project.
