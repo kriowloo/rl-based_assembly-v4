@@ -72,6 +72,8 @@ This implementation is able to represent each state in different approaches. All
 
 All source files are stored in *src* folder and were written in Python. There are 10 source files in this folder, as described below:
 
-1) RLAssembly.py: This source file is responsible for starting the application. It checks input parameters from user and start RL training if everything is properly configured, by creating an object of Environment - that basically controls current state and allows action taking - and another object of DFADeepQNetwork - the class where all DQN strategy is implemented to DFA problem.
+1) **RLAssembly.py**: This source file is responsible for starting the application. It checks input parameters from user and start RL training if everything is properly configured, by creating an object of Environment - that basically controls current state and allows action taking - and another object of DFADeepQNetwork - the class where all DQN strategy is implemented to DFA problem.
 
-2)
+2) **Environment.py**: It contains the class responsible to translate DFA problem to a DQN approach. This class basically contains two methods: *getInitialState* (that create an image representation for the initial state of the state space) and *step* (that is responsible to execute an action considering the current state). This class is totally depending on State2Image class, described soon.
+
+3)
