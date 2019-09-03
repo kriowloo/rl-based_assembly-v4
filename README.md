@@ -26,7 +26,13 @@ This implementation is able to represent each state in different approaches. All
 
 **Install instructions**
 
-1) Clone this git repo (or manually download and extract files)
+1) Prerequisites
+
+This software was written in Python and has the following dependencies:
+
+   - Python 3 (or superior)
+
+2) Clone this git repo (or manually download and extract files)
 
 ```console
 user@host:~$ git clone 
