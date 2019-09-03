@@ -63,11 +63,20 @@ This implementation is able to represent each state in different approaches. All
    user@host:~# python3 RLAssembler.py
    ```
 
-   Below an example of execution using the example input file (named *experiment1.fasta* and stored in *data* folder), running for only 10 episodes on GPU and considering state representation number 5.
+   Below an example of execution using the example input file (named *experiment1.fasta* and stored in *data* folder), running for only 10 episodes and considering state representation number 5.
    
    ```console
-   user@host:~# python3 RLAssembler.py -e 10 -bm 2000 -g 0.95 -em 0.01 -ed 0.995 -bb 32 -m 0 -s 5 -gpu 1 ../data/experiment1.fasta
+   user@host:~# python3 RLAssembler.py -e 10 -bm 2000 -g 0.95 -em 0.01 -ed 0.995 -bb 32 -m 0 -s 5 ../data/experiment1.fasta
    ```
+   
+   > Note: This software is compatible with GPU. To run it on a GPU, set parameter gpu_enabled to 1. See below an example of running (using another Docker image, which is GPU enabled):
+   
+      ```console
+      user@host:~$ docker run --runtime=nvidia --rm -it ufoym/deepo bash
+      user@host:~# pip install biopython
+      user@host:~# python3 RLAssembler.py -e 10 -bm 2000 -g 0.95 -em 0.01 -ed 0.995 -bb 32 -m 0 -s 5 -gpu 1 ../data/experiment1.fasta
+      ```
+   
 **Documentation**
 
 All source files are stored in *src* folder and were written in Python. There are 10 source files in this folder, as described below:
