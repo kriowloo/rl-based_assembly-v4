@@ -45,6 +45,6 @@ This implementation is able to represent each state in different approaches. All
 2) Clone this git repo (or manually download and extract files) into some folder (below, there is an example where git project is downloaded to the user's folder)
 
    ```console
-   user@host:~$ cd # choose one folder to store source files
+   user@host:~$ cd
    user@host:~$ git clone https://github.com/kriowloo/rl-based_assembly-v4.git
    ```
