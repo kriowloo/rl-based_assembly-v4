@@ -23,3 +23,12 @@ This implementation is able to represent each state in different approaches. All
 > \[1\] M. Bocicor, G. Czibula and I. Czibula, "A Reinforcement Learning Approach for Solving the Fragment Assembly Problem," 2011 *13th International Symposium on Symbolic and Numeric Algorithms for Scientific Computing*, Timisoara, 2011, pp. 191-198. doi: 10.1109/SYNASC.2011.9
 > 
 > \[2\] V. Mnih, K. Kavukcuoglu, D. Silver, A. Graves, I. Antonoglou, D. Wierstra, and M. Riedmiller, “Playing Atari with Deep Reinforcement Learning,” *arXiv e-prints*, p. arXiv:1312.5602, Dec 2013.
+
+**Install instructions**
+
+1) Clone this git repo (or manually download and extract files)
+
+```console
+user@host:~$ git clone 
+user@host:~$ git clone 
+```
