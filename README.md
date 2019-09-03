@@ -52,8 +52,16 @@ This implementation is able to represent each state in different approaches. All
    
    > Note: After typing git clone, your username and password will be prompted, since this is a private project.
 
-3) Run the software by using *RLAssembler* script
+3) Run the software by using *RLAssembler.py* script (in *src* folder), setting up required parameters and providing the input file containing the reads to be assembled (in FASTA format). Run it without any parameters to see all parameter descriptions.
 
    ```console
-   user@host:~$ ./RLAssembler <options> input.fasta
+   user@host:~$ cd src
+   user@host:~$ python3 RLAssembler.py
+   ```
+
+   Below an example of execution using the example input file (named *experiment1.fasta* and stored in *data* folder).
+   
+   ```console
+   user@host:~$ cd src   
+   user@host:~$ python3 RLAssembler.py -e 1000000 -bm 2000 -g 0.95 -em 0.01 -ed 0.995 -bb 32 -m 0 -s 5 -gpu 1 ../data/experiment1.fasta
    ```
