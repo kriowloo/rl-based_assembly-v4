@@ -26,7 +26,7 @@ This implementation is able to represent each state in different approaches. All
 
 **Install instructions**
 
-1) Prerequisites
+1) Install prerequisites
 
    This software was written in Python and has the following dependencies:
 
