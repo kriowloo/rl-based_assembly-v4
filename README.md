@@ -31,6 +31,13 @@ This implementation is able to represent each state in different approaches. All
 This software was written in Python and has the following dependencies:
 
    - Python 3 (or superior)
+   - Git (optional)
+   - Numpy (recommended version 1.14.3)
+   - Biopython (recommended version 1.74)
+   - Scipy (recommended version 1.1.0)
+   - Pillow (recommended version 5.1.0)
+   - TensorFlow (recommended version 1.8.0)
+   - Keras (recommended version 2.1.6)
 
 2) Clone this git repo (or manually download and extract files)
 
