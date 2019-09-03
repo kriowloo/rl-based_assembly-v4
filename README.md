@@ -18,8 +18,8 @@ This implementation is able to represent each state in different approaches. All
 
 5) Only the forward image for each state: Only the forward image produced in the first approach is used to represent each state
 
-**References**
-
-\[1\] M. Bocicor, G. Czibula and I. Czibula, "A Reinforcement Learning Approach for Solving the Fragment Assembly Problem," 2011 *13th International Symposium on Symbolic and Numeric Algorithms for Scientific Computing*, Timisoara, 2011, pp. 191-198. doi: 10.1109/SYNASC.2011.9
-
-\[2\] V. Mnih, K. Kavukcuoglu, D. Silver, A. Graves, I. Antonoglou, D. Wierstra, and M. Riedmiller, “Playing Atari with Deep Reinforcement Learning,” *arXiv e-prints*, p. arXiv:1312.5602, Dec 2013.
+> **References**
+> 
+> \[1\] M. Bocicor, G. Czibula and I. Czibula, "A Reinforcement Learning Approach for Solving the Fragment Assembly Problem," 2011 *13th International Symposium on Symbolic and Numeric Algorithms for Scientific Computing*, Timisoara, 2011, pp. 191-198. doi: 10.1109/SYNASC.2011.9
+> 
+> \[2\] V. Mnih, K. Kavukcuoglu, D. Silver, A. Graves, I. Antonoglou, D. Wierstra, and M. Riedmiller, “Playing Atari with Deep Reinforcement Learning,” *arXiv e-prints*, p. arXiv:1312.5602, Dec 2013.
