@@ -91,12 +91,19 @@ All source files are stored in *src* folder and were written in Python. There ar
 3) **DFADeepQNetwork.py**: It contains the core class, named DFADeepQNetwork, that implements DQN algorithm. The most import methods of this class are:
 
    a) \_build_model: method to create a CNN to learn actions in the future
+   
    b) \_remember: auxiliary method that stores in a finite queue the last actions taken to become possible *experience replay*<sup>2</sup>
+   
    c) \_replay: method that trains the CNN built using a random batch of actions taken (according to *experience replay* strategy)
+   
    d) \_act: method that chooses an action to be taken (according to *e-Greedy* and DQN strategies)
+   
    e) \_decay_epsilon: method that decreases epsilon value (*e-Greedy* strategy)
+   
    f) \_stateToCNN: method that receives an array that contains a grayscale image and transform it to be used as input to the CNN built
+   
    g) train: method that actually implements DQN
+   
    h) test: method used to watch the agent learning - through it, it is possible to ask the agent to take a number of actions to check how good was its previous learning
 
 4) **State2Image.py**: It contains an abstract class, that is base for 5 concrete classes and represents each state of the state space into an imagem. Since only some states (selected in *_replay* method) are actually used to train the CNN, it not necessary to store the whole pixel matrix of all images. So that, all images were initially represented compressed, being decompressed only if needed. This class is responsible for producing these compressed images, for decompressing them, and for optimize image generation in order to speed up implementation. Considering that each state can be represented in 5 different ways, there are 5 subclasses of State2Image that implement all the aforementioned approaches, namely State2TwoImages, State2LargerImage, State2MergedImage, State2RandomImage, State2ForwardImage, respectively.
