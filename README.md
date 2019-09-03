@@ -47,8 +47,13 @@ This implementation is able to represent each state in different approaches. All
    ```console
    user@host:~$ cd
    user@host:~$ git clone https://github.com/kriowloo/rl-based_assembly-v4.git
+   user@host:~$ cd rl-based_assembly-v4
    ```
    
    > Note: After typing git clone, your username and password will be prompted, since this is a private project.
 
-3) Access the folder where the source files were stored and run the software by using *RLAssembler* script
+3) Run the software by using *RLAssembler* script
+
+   ```console
+   user@host:~$ ./RLAssembler <options> input.fasta
+   ```
