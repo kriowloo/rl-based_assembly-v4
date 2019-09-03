@@ -89,6 +89,7 @@ All source files are stored in *src* folder and were written in Python. There ar
 2) **Environment.py**: It contains the class responsible to translate DFA problem to a DQN approach. This class basically contains two methods: *getInitialState* (that create an image representation for the initial state of the state space) and *step* (that is responsible to execute an action considering the current state). This class is totally depending on State2Image class, described soon.
 
 3) **DFADeepQNetwork.py**: It contains the core class, named DFADeepQNetwork, that implements DQN algorithm. The most import methods of this class are:
+
    a) \_build_model: method to create a CNN to learn actions in the future
    b) \_remember: auxiliary method that stores in a finite queue the last actions taken to become possible *experience replay*<sup>2</sup>
    c) \_replay: method that trains the CNN built using a random batch of actions taken (according to *experience replay* strategy)
