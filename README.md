@@ -42,9 +42,9 @@ This implementation is able to represent each state in different approaches. All
    
    > Note: We recommend to run this software into a container, since it requires specific versions of some Python modules. There is a Docker image already configured with Ubuntu (~1GB) able to run it. However, if you prefer, Python requirements file is also available into *src* folder and can be used to install all required modules through *pip*. To run it inside a container from the aforementioned Docker image, just run *docker run --rm -it kpadovani/rlassembler-os:ubuntu*.
 
-2) Clone this git repo (or manually download and extract files)
+2) Clone this git repo (or manually download and extract files) into some folder (below, there is an example where git project is downloaded to the user's folder)
 
-```console
-user@host:~$ cd # choose one folder to store source files
-user@host:~$ git clone https://github.com/kriowloo/rl-based_assembly-v4.git
-```
+   ```console
+   user@host:~$ cd # choose one folder to store source files
+   user@host:~$ git clone https://github.com/kriowloo/rl-based_assembly-v4.git
+   ```
