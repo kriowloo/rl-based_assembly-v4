@@ -38,7 +38,8 @@ This implementation is able to represent each state in different approaches. All
    - Pillow (recommended version 5.1.0)
    - TensorFlow (recommended version 1.8.0)
    - Keras (recommended version 2.1.6)
-
+   
+   
    > Note: We recommend to run this software into a container, since it requires specific versions of some Python modules. There is a Docker image already configured with Ubuntu (~1GB) to run it. However, if you prefer, Python requirements file is also available into *src* folder and can be used to install all required modules through *pip*. To run it inside a container from the aforementioned Docker image, just run *docker run --rm -it kpadovani/rlassembler-os:ubuntu*.
 
 2) Clone this git repo (or manually download and extract files)
