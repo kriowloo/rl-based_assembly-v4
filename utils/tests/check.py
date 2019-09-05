@@ -29,6 +29,8 @@
 # ------| 10-12-5_1.png
 # ------| 28-1-13-24-11-8_0.png
 # ------| 28-1-13-24-11-8_1.png
+#
+# See an example of testing in utils/examples/image_test folder.
 
 import sys
 import os
