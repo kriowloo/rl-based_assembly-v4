@@ -20,7 +20,7 @@ class Environment:
         # reward = 0.1 if not final else pm
         next_state = img
         reward = pm
-        self.debug(next_state)
+        # self.debug(next_state)
         return next_state, reward, stop
 
     def debug(self, next_state):
