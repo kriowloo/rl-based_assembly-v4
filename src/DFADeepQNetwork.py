@@ -136,7 +136,7 @@ class DFADeepQNetwork:
                 for j in range(len(pixels)):
                     images[0][i][start_col + j][f] = (255 - pixels[j]) / 255.0
         array = np.array(images)
-        self.debug(state, array)
+        # self.debug(state, array)
         return array
 
     def debug(self, state, array):
