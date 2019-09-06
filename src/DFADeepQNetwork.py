@@ -1,4 +1,4 @@
-from keras.models import Sequential 
+from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, Lambda
 from keras.optimizers import RMSprop
 from numpy.random import randint, seed, rand
@@ -9,6 +9,7 @@ from keras import backend as K
 import tensorflow as tf
 from keras.backend import tensorflow_backend
 from State2Image import State2Image
+import os
 
 class DFADeepQNetwork:
     def _setupKerasCPU(self):
@@ -56,7 +57,8 @@ class DFADeepQNetwork:
 
         # create model
         model = Sequential()
-        model.add(Conv2D(16, kernel_size=8, activation='relu', input_shape=(self.image_width, self.n_reads,self.frames_per_state)))
+        # considering data_format=channel_last
+        model.add(Conv2D(16, kernel_size=8, activation='relu', input_shape=(self.n_reads, self.image_width, self.frames_per_state)))
         model.add(Conv2D(32, kernel_size=4, activation='relu'))
         # model.add(Conv2D(4, kernel_size=8, activation='relu', input_shape=(self.image_width, self.n_reads,self.frames_per_state)))
         # model.add(Conv2D(8, kernel_size=4, activation='relu'))
@@ -114,15 +116,15 @@ class DFADeepQNetwork:
             target_f[0][action] = target
             self.model.fit(state_inputcnn, target_f, epochs=1, verbose=0)
 
-    # transform compressed image to a numpy array compatible with keras
+    # transform compressed image to a numpy array compatible with keras (data_format=channel_last)
     def _stateToCNN(self, state):
         images = []
-        for w in range(self.image_width):
-            aux_w = []
-            images.append(aux_w)
-            for h in range(self.image_height):
-                aux_h = [255 for _ in range(len(state))]
-                aux_w.append(aux_h)
+        for h in range(self.image_height):
+            aux_h = []
+            images.append(aux_h)
+            for w in range(self.image_width):
+                aux_w = [0 for _ in range(len(state))]
+                aux_h.append(aux_w)
         images = [images]
         for f in range(len(state)):
             compressed = state[f]
@@ -132,9 +134,28 @@ class DFADeepQNetwork:
                     continue
                 pixels = compressed[i][1]
                 for j in range(len(pixels)):
-                    images[0][start_col + j][i][f] = (255 - pixels[j]) / 255.0
+                    images[0][i][start_col + j][f] = (255 - pixels[j]) / 255.0
+        array = np.array(images)
+        self.debug(state, array)
+        return array
 
-        return np.array(images)
+    def debug(self, state, array):
+        token = '/data/debug.txt'
+        if os.path.exists(token):
+            os.remove(token)
+            error = 0
+            for i in range(len(state)):
+                image = state[i]
+                im = State2Image.decompressImage(image, self.image_width, self.image_height)
+                for h in range(self.image_height):
+                    for w in range(self.image_width):
+                        if (255 - im[h][w])/255.0 != array[0][h][w][i]:
+                            error += 1
+                            print(str(array[0][h][w][i]) + " " + str((255 - im[h][w])/255.0))
+            if error > 0:
+                print("Erro " + str(error) + " w=" + str(self.image_width) + " h=" + str(self.image_height))
+            else:
+                print("OK")
 
     # decay epsilon to diminish the probability of taking random actions
     def _decay_epsilon(self):
