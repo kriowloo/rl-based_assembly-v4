@@ -58,8 +58,8 @@ class DFADeepQNetwork:
         # create model
         model = Sequential()
         # considering data_format=channel_last
-        model.add(Conv2D(16, kernel_size=8, strides = 4, activation='relu', input_shape=(self.n_reads, self.image_width, self.frames_per_state)))
-        model.add(Conv2D(32, kernel_size=4, strides = 2, activation='relu'))
+        model.add(Conv2D(16, kernel_size=8, activation='relu', input_shape=(self.n_reads, self.image_width, self.frames_per_state)))
+        model.add(Conv2D(32, kernel_size=4, activation='relu'))
         # model.add(Conv2D(4, kernel_size=8, activation='relu', input_shape=(self.image_width, self.n_reads,self.frames_per_state)))
         # model.add(Conv2D(8, kernel_size=4, activation='relu'))
         model.add(Flatten())
