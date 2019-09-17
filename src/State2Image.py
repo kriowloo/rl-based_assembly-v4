@@ -102,7 +102,7 @@ class State2Image:
             next_state["col"] = 0 if overlap == -1 else cur_state["col"] + overlap
             next_state["pixels"] = [self._getPixelValue(nucleotide) for nucleotide in self.reads[next_read_id]]
             next_state["pixels"] = np.array(next_state["pixels"], dtype = np.uint8)
-            next_state["breaks"] = cur_state["breaks"] + 1 if overlap == -1 else 0
+            next_state["breaks"] = cur_state["breaks"] + (1 if overlap == -1 else 0)
             next_state["original_pm"] = cur_state["original_pm"] + (self.sw(cur_read_id, next_read_id) if cur_read_id != next_read_id else 0)
             n_reads_of_state = next_state["row"] + 1
             factor = (n_reads_of_state - next_state["breaks"]) / n_reads_of_state
