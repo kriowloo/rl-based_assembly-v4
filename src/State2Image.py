@@ -29,7 +29,7 @@ class State2Image:
     # partial images that have already been built
     def clearBuffer(self):
         self.overlap_positions = {}
-        self.root_image_search = {"row" : -1, "col" : 0, "read_id" : -1, "pm" : 0.0, "breaks" : 0}
+        self.root_image_search = {"row" : -1, "col" : 0, "read_id" : -1, "pm" : 0.0, "breaks" : 0, "original_pm" : 0}
         self.sw_scores = {}
 
     # return the maximum width for this object
@@ -103,8 +103,10 @@ class State2Image:
             next_state["pixels"] = [self._getPixelValue(nucleotide) for nucleotide in self.reads[next_read_id]]
             next_state["pixels"] = np.array(next_state["pixels"], dtype = np.uint8)
             next_state["breaks"] = cur_state["breaks"] + 1 if overlap == -1 else 0
-            next_state["pm"] = cur_state["pm"] + (self.sw(cur_read_id, next_read_id) if cur_read_id != next_read_id else 0)
-            # MANIPULAR AQUI pm DE MODO A APLICAR O FATOR (num_reads_in_state-breaks)/num_reads_in_state
+            next_state["original_pm"] = cur_state["original_pm"] + (self.sw(cur_read_id, next_read_id) if cur_read_id != next_read_id else 0)
+            n_reads_of_state = next_state["row"] + 1
+            factor = (n_reads_of_state - next_state["breaks"]) / n_reads_of_state
+            next_state["pm"] = next_state["original_pm"] * factor
             # next_state["pm"] = 0 if repeat else cur_state["pm"] + self.sw(cur_read_id, next_read_id)
             # next_state["pm"] *= 2 if next_state["row"] + 1 == self.number_of_reads and not repeat else 1
         return cur_state[next_read_id]
