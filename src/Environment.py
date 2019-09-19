@@ -1,6 +1,7 @@
 import os
 from State2Image import State2Image
 import random
+import math
 
 class Environment:
     def __init__(self, ol, reads, number_of_reads = None):
@@ -25,18 +26,39 @@ class Environment:
         return next_state, reward, stop
 
     def getActionFromExploration(self):
-        return self._getRandomActionWithoutRepeat()
+        # return self._getRandomActionWithoutRepeat()
+        return self._getMaxRandomActionWithoutRepeat()
 
-    # select randomly an action that has not been selected before
-    def _getRandomActionWithoutRepeat(self):
+    def _getCandidateActions(self):
         candidates = []
         for action_id in range(self.number_of_reads):
             if not action_id in self.actions_taken:
                 candidates.append(action_id)
+        return candidates
+
+    # select randomly an action that has not been selected before
+    def _getRandomActionWithoutRepeat(self):
+        candidates = self._getCandidateActions()
         return random.sample(candidates, 1)[0]
 
-    def _getMaxRandomActionWithoutRepeat(self):
-        pass
+    def _getMaxRandomActionWithoutRepeat(self, percent = 1.0):
+        if len(self.actions_taken) == 0:
+            return random.randrange(0, self.number_of_reads)
+
+        candidates = self._getCandidateActions()
+        last = self.actions_taken[-1]
+        n_candidates = math.ceil(self.number_of_reads * percent)
+        if n_candidates > len(candidates):
+            n_candidates = len(candidates)
+        candidates = random.sample(candidates, n_candidates)
+        max_action = None
+        max_value = None
+        for candidate in candidates:
+            value = self.ol.sw(last, candidate)
+            if max_action is None or value > max_value:
+                max_value = value
+                max_action = candidate
+        return max_action
 
     def debug(self, next_state):
         token = '/data/debug.txt'
