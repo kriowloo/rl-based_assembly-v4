@@ -58,8 +58,11 @@ class DFADeepQNetwork:
         # create model
         model = Sequential()
         # considering data_format=channel_last
-        model.add(Conv2D(16, kernel_size=8, activation='relu', input_shape=(self.n_reads, self.image_width, self.frames_per_state)))
-        model.add(Conv2D(32, kernel_size=4, activation='relu'))
+
+        model.add(Conv2D(16, kernel_size=3, activation='relu', input_shape=(self.n_reads, self.image_width, self.frames_per_state)))
+        model.add(Conv2D(32, kernel_size=3, activation='relu'))
+        # model.add(Conv2D(16, kernel_size=8, strides=(4,4), activation='relu', input_shape=(self.n_reads, self.image_width, self.frames_per_state)))
+        # model.add(Conv2D(32, kernel_size=4, strides=(2,2), activation='relu'))
         # model.add(Conv2D(4, kernel_size=8, activation='relu', input_shape=(self.image_width, self.n_reads,self.frames_per_state)))
         # model.add(Conv2D(8, kernel_size=4, activation='relu'))
         model.add(Flatten())
@@ -71,18 +74,10 @@ class DFADeepQNetwork:
         model.compile(optimizer, loss='mse')
         return model
 
-    # select randomly an action that has not been selected before
-    def _getNewRandomAction(self):
-        candidates = []
-        for action_id in range(self.n_reads):
-            if not action_id in self.env.actions_taken:
-                candidates.append(action_id)
-        return random.sample(candidates, 1)[0]
-
     # define which action is going to be taken at the next step (e-greedy)
     def _act(self, state, training = True):
         if training and np.random.rand() <= self.epsilon:
-            return self._getNewRandomAction()
+            return self.env.getActionFromExploration()
         act_values = self.model.predict(self._stateToCNN(state))
         # return np.argmax(act_values[0])
         nn_outputs = act_values[0]
