@@ -1,5 +1,6 @@
 import os
 from State2Image import State2Image
+import random
 
 class Environment:
     def __init__(self, ol, reads, number_of_reads = None):
@@ -22,6 +23,20 @@ class Environment:
         reward = pm
         # self.debug(next_state)
         return next_state, reward, stop
+
+    def getActionFromExploration(self):
+        return self._getRandomActionWithoutRepeat()
+
+    # select randomly an action that has not been selected before
+    def _getRandomActionWithoutRepeat(self):
+        candidates = []
+        for action_id in range(self.number_of_reads):
+            if not action_id in self.actions_taken:
+                candidates.append(action_id)
+        return random.sample(candidates, 1)[0]
+
+    def _getMaxRandomActionWithoutRepeat(self):
+        pass
 
     def debug(self, next_state):
         token = '/data/debug.txt'
