@@ -45,6 +45,11 @@ def _start(param_values, reads, n_reads, max_read_len):
     print("Creating state2image converter...")
     ol = _getState2ImageConverter(stateversion, reads, max_read_len, swmatch, swmismatch, swgap, n_reads)
 
+    # _, pm = ol._getCompressedImageForReads([9,8,7,6,5,4,3,2,1])
+    # _, pm = ol._getCompressedImageForReads([9,0, 1, 3, 19, 20, 21, 27,8, 10, 23,29,22,25,11, 15, 17,2, 6, 7, 13, 14, 18,24, 26, 28,5,12, 16,4])
+    # print(pm)
+    # sys.exit(1)
+
     # create RL environment to assembly
     print("Creating assembly environment...")
     env = Environment(ol, reads, n_reads)
