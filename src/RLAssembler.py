@@ -176,6 +176,7 @@ def _showParams(param_values, n_reads, max_read_len):
     print("\tLargest read length: " + str(max_read_len))
 
 def _getReads(fasta_path):
+    print("Info: " + fasta_path)
     if not os.path.isfile(fasta_path):
         print("Warning: Input FASTA not found.")
         return None, None, None
