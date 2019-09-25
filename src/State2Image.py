@@ -148,9 +148,7 @@ class State2Image:
 
         for x in max_indexes:
             if x[0] >= x[1]:
-                print("sw=" + s1 + " " + s2 + " " + str(from_read_id) + " " + str(to_read_id) + " " + str(max_value))
                 return max_value
-        print(str(from_read_id) + " " + str(to_read_id) + " 0")
         return 0
 
     # calculate Smith-Waterman score for two reads (identified by their
