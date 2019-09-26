@@ -106,7 +106,8 @@ class State2Image:
             next_state["original_pm"] = cur_state["original_pm"] + (self.sw(cur_read_id, next_read_id) if cur_read_id != next_read_id else 0)
             n_reads_of_state = next_state["row"] + 1
             factor = (n_reads_of_state - next_state["breaks"]) / n_reads_of_state
-            next_state["pm"] = 0.1 if n_reads_of_state != self.number_of_reads else next_state["original_pm"] * factor
+            next_state["pm"] = next_state["original_pm"] * factor
+            # next_state["pm"] = 0.1 if n_reads_of_state != self.number_of_reads else next_state["original_pm"] * factor
             # next_state["pm"] = 0 if repeat else cur_state["pm"] + self.sw(cur_read_id, next_read_id)
             # next_state["pm"] *= 2 if next_state["row"] + 1 == self.number_of_reads and not repeat else 1
         return cur_state[next_read_id]
