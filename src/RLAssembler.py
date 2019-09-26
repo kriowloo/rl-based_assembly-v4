@@ -179,7 +179,7 @@ def _checkParam(tag, value):
         if not value.isdigit():
             return None
         value = int(value)
-        return value if value >= 1 and value <= 5 else None
+        return value if value >= 1 and value <= 6 else None
     if tag == "pixel_norm_type":
         if not value.isdigit():
             return None
