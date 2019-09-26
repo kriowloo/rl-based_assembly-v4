@@ -12,7 +12,7 @@ class Plotter:
         
     def addPoint(self, pm, epsilon):
         self.epsilons.append(epsilon)
-        self.pms.append(pm / maxPM)
+        self.pms.append(pm / self.maxPM)
         
     def plotPerformance(self):
         x = range(len(self.epsilons))
