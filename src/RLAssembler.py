@@ -40,6 +40,7 @@ def _start(param_values, reads, n_reads, max_read_len):
     buffer_batch_size = param_values["buffer_batch_size"]
     gpu_enabled = param_values["gpu_enabled"]
     max_actions_per_episode = param_values["max_actions_per_episode"]
+    pixel_norm_type = param_values["pixel_norm_type"]
 
     # create a converter able to represent each state as image(s)
     print("Creating state2image converter...")
@@ -56,7 +57,7 @@ def _start(param_values, reads, n_reads, max_read_len):
 
     # create intelligent agent
     print("Creating a DQN for DFA problem...")
-    agent = DFADeepQNetwork(n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled)
+    agent = DFADeepQNetwork(n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled, pixel_norm_type)
 
     # start training
     print("Starting training...")
@@ -81,7 +82,7 @@ def _getState2ImageConverter(sv, reads, max_read_len, match, mismatch, gap, n_re
     return None
 
 # show how to use the software
-def printUsage(param_descriptions, required_params, param_tags, state_versions, default_values):
+def printUsage(param_descriptions, required_params, param_tags, state_versions, pixel_norm_types, default_values):
     optional = {}
     print("Error to run RLAssembler.")
     print()
@@ -113,6 +114,17 @@ def printUsage(param_descriptions, required_params, param_tags, state_versions, 
     for key in sorted_state_versions:
         val = state_versions[key]
         print("\t" + key + ": " + val + ";")
+
+    print()
+    print("Pixel normalization type corresponds to the mode each pixel will be represented to neural network. The following options are available:")
+    sorted_pixel_norm_types = []
+    for key in pixel_norm_types.keys():
+        sorted_pixel_norm_types.append(key)
+    sorted_pixel_norm_types.sort()
+    for key in sorted_pixel_norm_types:
+        val = pixel_norm_types[key]
+        print("\t" + key + ": " + val + ";")
+    
     print()
 
 # setup parameters
@@ -166,6 +178,12 @@ def _checkParam(tag, value):
             return None
         value = int(value)
         return value if value >= 1 and value <= 5 else None
+    if tag == "pixel_norm_type":
+        if not value.isdigit():
+            return None
+        value = int(value)
+        return value if value >= 0 and value <= 1 else None
+
     return None
 
 def _showParams(param_values, n_reads, max_read_len):
@@ -212,7 +230,8 @@ if __name__ == "__main__":
         "swmismatch" : "value for each occurrence of unmatch in Smith-Waterman algorithm",
         "swgap" : "value for gaps found in Smith-Waterman algorithm",
         "threads" : "number of threads to be used",
-        "gpu_enabled" : "flag to indicate whether GPU is disabled (gpu_enabled=0) or enabled (gpu_enabled=positive)"
+        "gpu_enabled" : "flag to indicate whether GPU is disabled (gpu_enabled=0) or enabled (gpu_enabled=positive)",
+        "pixel_norm_type" : "set the type of pixel normalization is going to be used (see valid values below)"
     }
     # command-line parameters used to set up each parameter
     param_tags = {
@@ -229,7 +248,8 @@ if __name__ == "__main__":
         "-swi" : "swmismatch", # value for each occurrence of unmatch in Smith-Waterman algorithm
         "-swg" : "swgap", # value for gaps found in Smith-Waterman algorithm
         "-t" : "threads", # number of threads to be used
-        "-gpu" : "gpu_enabled" # flag indicating the use (or not) of gpu
+        "-gpu" : "gpu_enabled", # flag indicating the use (or not) of gpu
+        "-norm" : "pixel_norm_type"
     }
     required_params = [
         "episodes",
@@ -248,7 +268,8 @@ if __name__ == "__main__":
         "swmismatch" : -0.33,
         "swgap" : -1.33,
         "threads" : 1,
-        "gpu_enabled" : 0
+        "gpu_enabled" : 0,
+        "pixel_norm_type" : 0
     }
     # available options to represent each state
     state_versions = {
@@ -258,11 +279,15 @@ if __name__ == "__main__":
         "4": "one image for each state (one of the two images from type 1 is randomly choosen)",
         "5": "one image for each state (only the image that read order correspond to the exact order found in the state)"
     }
+    pixel_norm_types = {
+      "0": "convert pixel values by dividing actual values by 255 - thus black and white pixels will be normalized to zero and one respectively",
+      "1": "convert pixel values so that white pixels will be normalized to zero and black pixels to one (formula: (255 - pixel) / 255)"
+    }
     # dict to store all param values
     param_values = {}
     reads, n_reads, max_read_len = _setParams(param_tags, required_params, param_values, default_values)
     if reads is None:
-        printUsage(param_descriptions, required_params, param_tags, state_versions, default_values)
+        printUsage(param_descriptions, required_params, param_tags, state_versions, pixel_norm_types, default_values)
         sys.exit(1)
 
     _start(param_values, reads, n_reads, max_read_len)
