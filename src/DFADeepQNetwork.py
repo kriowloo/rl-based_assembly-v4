@@ -26,7 +26,7 @@ class DFADeepQNetwork:
         self.max_read_len = max_read_len
         self.gpu_enabled = gpu_enabled
         self.threads = threads
-        self.normalizePixel, self.getWhitePixelValue = self.getPixelNormalizationFunction(pixel_norm_type)
+        self.normalizePixel, self.getWhitePixelValue = self.getPixelNormalizationFunctions(pixel_norm_type)
 
         # image_height: height of images that will represent states (ie: number of reads)
         self.image_height = n_reads
