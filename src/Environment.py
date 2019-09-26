@@ -9,14 +9,26 @@ class Environment:
         self.reads = reads
         self.number_of_reads = len(self.reads) if number_of_reads is None else number_of_reads
         self.actions_taken = []
+        self.debug_episode = 0
 
+    def debugImageGeneration(self, state, pm):
+        pm = ("%.2f" % (pm)).replace('.','')
+        while len(pm) <= 6:
+            pm = "0" + pm
+        output_file = "img_" + str(self.debug_episode) + "_" + str(len(self.actions_taken)) + "_" + pm + ".png" 
+        State2Image.saveCompressedImage(state, self.ol.image_width, self.ol.image_height, output_file)
+        
     def getInitialState(self):
+        self.debug_episode += 1
         self.actions_taken = []
-        return self.ol.getInitialState()
+        state = self.ol.getInitialState()
+        self.debugImageGeneration(state, 0)
+        return state
 
     def step(self, action):
         self.actions_taken.append(action)
         img, pm = self.ol.getStateInfoForReads(self.actions_taken)
+        self.debugImageGeneration(img, pm)
         stop = len(self.actions_taken) == self.number_of_reads
         # final = len(set(self.actions_taken)) == self.number_of_reads
         # reward = 0.1 if not final else pm
