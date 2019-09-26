@@ -1,4 +1,4 @@
-from State2Image import State2ForwardImage
+from State2ForwardImage import State2ForwardImage
 
 class State2HiddenForwardImage(State2ForwardImage):
     def __init__(self, reads, max_read_len, match, mismatch, gap, n_reads):
