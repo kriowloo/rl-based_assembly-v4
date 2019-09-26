@@ -15,20 +15,27 @@ class Environment:
         pm = ("%.2f" % (pm)).replace('.','')
         while len(pm) <= 6:
             pm = "0" + pm
-        output_file = "img_" + str(self.debug_episode) + "_" + str(len(self.actions_taken)) + "_" + pm + ".png" 
-        State2Image.saveCompressedImage(state, self.ol.image_width, self.ol.image_height, output_file)
+        e = str(self.debug_episode)
+        while len(e) <= 10:
+            e = "0" + e
+        a = str(len(self.actions_taken))
+        while len(a) <= 3:
+            a = "0" + a
+        for i in range(len(state)):
+            output_file = "img_" + e + "_" + a + "_" + pm + "_" + str(i) + ".png" 
+            State2Image.saveCompressedImage(state, self.ol.image_width, self.ol.image_height, output_file)
         
     def getInitialState(self):
         self.debug_episode += 1
         self.actions_taken = []
         state = self.ol.getInitialState()
-        self.debugImageGeneration(state[0], 0)
+        self.debugImageGeneration(state, 0)
         return state
 
     def step(self, action):
         self.actions_taken.append(action)
         img, pm = self.ol.getStateInfoForReads(self.actions_taken)
-        self.debugImageGeneration(img[0], pm)
+        self.debugImageGeneration(img, pm)
         stop = len(self.actions_taken) == self.number_of_reads
         # final = len(set(self.actions_taken)) == self.number_of_reads
         # reward = 0.1 if not final else pm
