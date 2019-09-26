@@ -20,12 +20,13 @@ class DFADeepQNetwork:
         session = tf.Session(config=config)
         tensorflow_backend.set_session(session)
 
-    def __init__(self, n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled = False):
+    def __init__(self, n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled = False, pixel_norm_type = 1):
         self.env = env
         self.n_reads = n_reads
         self.max_read_len = max_read_len
         self.gpu_enabled = gpu_enabled
         self.threads = threads
+        self.normalizePixel = self.getPixelNormalizationFunction(pixel_norm_type)
 
         # image_height: height of images that will represent states (ie: number of reads)
         self.image_height = n_reads
@@ -48,6 +49,18 @@ class DFADeepQNetwork:
         # build CNN
         self.model = self._build_model()
 
+    def normalizeWhiteToBlack(self, pixel_value):
+        return (255 - pixel_value) / 255.0
+
+    def normalizeBlackToWhite(self, pixel_value):
+        return pixel_value / 255.0
+        
+    def getPixelNormalizationFunction(self, pixel_norm_type):
+        if pixel_norm_type == 1:
+            return self.normalizeWhiteToBlack
+        return self.normalizeBlackToWhite
+        
+        
     def _build_model(self):
         # setting up Keras to perform on CPU or GPU
         if self.gpu_enabled:
@@ -129,7 +142,7 @@ class DFADeepQNetwork:
                     continue
                 pixels = compressed[i][1]
                 for j in range(len(pixels)):
-                    images[0][i][start_col + j][f] = (255 - pixels[j]) / 255.0
+                    images[0][i][start_col + j][f] = self.normalizePixel(pixels[j])
         array = np.array(images)
         # self.debug(state, array)
         return array
