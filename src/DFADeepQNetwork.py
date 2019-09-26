@@ -29,7 +29,7 @@ class DFADeepQNetwork:
         self.threads = threads
         self.normalizePixel, self.getWhitePixelValue = self.getPixelNormalizationFunctions(pixel_norm_type)
         # (plot_fig_path = path to plot the performance figure; is None, no figure is saved)
-        self.plotter = None if plot_fig_path is None or maxPM is None else Plotter(maxPM, plot_fig_path)
+        self.plotter = None if plot_fig_path is None or maxPM is None or maxPM <= 0 else Plotter(maxPM, plot_fig_path)
 
         # image_height: height of images that will represent states (ie: number of reads)
         self.image_height = n_reads
