@@ -2,7 +2,7 @@ from State2ForwardImage import State2ForwardImage
 
 class State2HiddenForwardImage(State2ForwardImage):
     def __init__(self, reads, max_read_len, match, mismatch, gap, n_reads):
-        super().__init__(match, mismatch, gap, reads, max_read_len, n_reads)
+        super().__init__(reads, max_read_len, match, mismatch, gap, n_reads)
 
     # return two information (1- image(s) representation for the reads and 2- PM for the reads)
     def getStateInfoForReads(self, read_ids_order):
