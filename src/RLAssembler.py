@@ -41,6 +41,8 @@ def _start(param_values, reads, n_reads, max_read_len):
     gpu_enabled = param_values["gpu_enabled"]
     max_actions_per_episode = param_values["max_actions_per_episode"]
     pixel_norm_type = param_values["pixel_norm_type"]
+    max_pm = param_values["max_pm"]
+    plot_fig_path = param_values["plot_fig_path"]
 
     # create a converter able to represent each state as image(s)
     print("Creating state2image converter...")
@@ -57,7 +59,7 @@ def _start(param_values, reads, n_reads, max_read_len):
 
     # create intelligent agent
     print("Creating a DQN for DFA problem...")
-    agent = DFADeepQNetwork(n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled, pixel_norm_type)
+    agent = DFADeepQNetwork(n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled, pixel_norm_type, plot_fig_path, max_pm)
 
     # start training
     print("Starting training...")
@@ -160,7 +162,7 @@ def _setParams(param_tags, required_params, param_values, default_values):
 # return None if the value is incorrect
 def _checkParam(tag, value):
     int_tags = ["episodes", "buffer_maxlen", "buffer_batch_size", "max_actions_per_episode", "threads", "gpu_enabled"]
-    float_tags = ["swmatch", "swmismatch", "swgap"]
+    float_tags = ["swmatch", "swmismatch", "swgap", "maxpm"]
     perc_tags = ["gamma", "epsilon_min", "epsilon_decay", "epsilon"]
     if tag in int_tags:
         return int(value) if value.isdigit() else None
@@ -233,7 +235,9 @@ if __name__ == "__main__":
         "swgap" : "value for gaps found in Smith-Waterman algorithm",
         "threads" : "number of threads to be used",
         "gpu_enabled" : "flag to indicate whether GPU is disabled (gpu_enabled=0) or enabled (gpu_enabled=positive)",
-        "pixel_norm_type" : "set the type of pixel normalization is going to be used (see valid values below)"
+        "pixel_norm_type" : "set the type of pixel normalization is going to be used (see valid values below)",
+        "plot_fig_path" : "set the path of the output image file referring to the performance plot",
+        "max_pm" : "set the maximum PM value to plot performance graph (non positive values disable plot production)"
     }
     # command-line parameters used to set up each parameter
     param_tags = {
@@ -251,7 +255,9 @@ if __name__ == "__main__":
         "-swg" : "swgap", # value for gaps found in Smith-Waterman algorithm
         "-t" : "threads", # number of threads to be used
         "-gpu" : "gpu_enabled", # flag indicating the use (or not) of gpu
-        "-norm" : "pixel_norm_type"
+        "-norm" : "pixel_norm_type",
+        "-maxpm" : "max_pm",
+        "-plotpath" : "plot_fig_path"
     }
     required_params = [
         "episodes",
@@ -271,7 +277,9 @@ if __name__ == "__main__":
         "swgap" : -1.33,
         "threads" : 1,
         "gpu_enabled" : 0,
-        "pixel_norm_type" : 0
+        "pixel_norm_type" : 0,
+        "max_pm" : 0,
+        "plot_fig_path" : "output.png"
     }
     # available options to represent each state
     state_versions = {
