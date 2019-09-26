@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def plotPerformance(epsilons, pms, output_path):
+def plotPerformance(pms, epsilons, output_path):
     x = range(len(epsilons))
     plt.plot(x, epsilons)
     plt.plot(x, pms)
