@@ -162,7 +162,7 @@ def _setParams(param_tags, required_params, param_values, default_values):
 # return None if the value is incorrect
 def _checkParam(tag, value):
     int_tags = ["episodes", "buffer_maxlen", "buffer_batch_size", "max_actions_per_episode", "threads", "gpu_enabled"]
-    float_tags = ["swmatch", "swmismatch", "swgap", "maxpm"]
+    float_tags = ["swmatch", "swmismatch", "swgap", "max_pm"]
     perc_tags = ["gamma", "epsilon_min", "epsilon_decay", "epsilon"]
     if tag in int_tags:
         return int(value) if value.isdigit() else None
@@ -187,7 +187,9 @@ def _checkParam(tag, value):
             return None
         value = int(value)
         return value if value >= 0 and value <= 1 else None
-
+    if tag == "plot_fig_path":
+        if value != "":
+            return value
     return None
 
 def _showParams(param_values, n_reads, max_read_len):
