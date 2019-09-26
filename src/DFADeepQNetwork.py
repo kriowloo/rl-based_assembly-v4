@@ -9,6 +9,7 @@ from keras import backend as K
 import tensorflow as tf
 from keras.backend import tensorflow_backend
 from State2Image import State2Image
+from Plotter import Plotter
 import os
 
 class DFADeepQNetwork:
@@ -20,13 +21,15 @@ class DFADeepQNetwork:
         session = tf.Session(config=config)
         tensorflow_backend.set_session(session)
 
-    def __init__(self, n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled = False, pixel_norm_type = 1):
+    def __init__(self, n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled = False, pixel_norm_type = 1, plot_fig_path = None, maxPM = None):
         self.env = env
         self.n_reads = n_reads
         self.max_read_len = max_read_len
         self.gpu_enabled = gpu_enabled
         self.threads = threads
         self.normalizePixel, self.getWhitePixelValue = self.getPixelNormalizationFunctions(pixel_norm_type)
+        # (plot_fig_path = path to plot the performance figure; is None, no figure is saved)
+        self.plotter = None if plot_fig_path is None or maxPM is None else Plotter(maxPM, plot_fig_path)
 
         # image_height: height of images that will represent states (ie: number of reads)
         self.image_height = n_reads
@@ -169,7 +172,7 @@ class DFADeepQNetwork:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
-    # train agent
+    # train agent 
     def train(self, episodes, buffer_batch_size, max_actions_per_episode):
         # Iterate learning
         for e in range(episodes):
@@ -192,11 +195,15 @@ class DFADeepQNetwork:
                 if stop or (max_actions_per_episode > 0 and time_t >= max_actions_per_episode):
                     # print episode id and the number of actions taken on it
                     print("episode: {}/{}, reward: {}, epsilon: {}".format(e+1, episodes, reward, self.epsilon))
+                    if self.plotter is not None:
+                        self.plotter.addPoint(reward, self.epsilon)
                     break
                 time_t += 1
             # train the agent with the experience of the episode
             self._replay(buffer_batch_size)
             self._decay_epsilon()
+        if self.plotter is not None:
+            self.plotter.plotPerformance()
         return None
 
     # ask agent to take actions according its prior learning
