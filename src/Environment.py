@@ -22,13 +22,13 @@ class Environment:
         self.debug_episode += 1
         self.actions_taken = []
         state = self.ol.getInitialState()
-        self.debugImageGeneration(state, 0)
+        self.debugImageGeneration(state[0], 0)
         return state
 
     def step(self, action):
         self.actions_taken.append(action)
         img, pm = self.ol.getStateInfoForReads(self.actions_taken)
-        self.debugImageGeneration(img, pm)
+        self.debugImageGeneration(img[0], pm)
         stop = len(self.actions_taken) == self.number_of_reads
         # final = len(set(self.actions_taken)) == self.number_of_reads
         # reward = 0.1 if not final else pm
