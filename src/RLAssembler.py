@@ -79,6 +79,8 @@ def _getState2ImageConverter(sv, reads, max_read_len, match, mismatch, gap, n_re
         return State2RandomImage(reads, max_read_len, match, mismatch, gap, n_reads)
     if sv == 5:
         return State2ForwardImage(reads, max_read_len, match, mismatch, gap, n_reads)
+    if sv == 6:
+        return State2HiddenForwardImage(reads, max_read_len, match, mismatch, gap, n_reads)
     return None
 
 # show how to use the software
@@ -277,7 +279,8 @@ if __name__ == "__main__":
         "2": "one image for each state (that with largest width of type 1)",
         "3": "one image for each state (both images from type 1 merged)",
         "4": "one image for each state (one of the two images from type 1 is randomly choosen)",
-        "5": "one image for each state (only the image that read order correspond to the exact order found in the state)"
+        "5": "one image for each state (only the image that read order correspond to the exact order found in the state)",
+        "6": "one image for each state (equals to version 5), but without misalignment between reads"        
     }
     pixel_norm_types = {
       "0": "convert pixel values by dividing actual values by 255 - thus black and white pixels will be normalized to zero and one respectively",
