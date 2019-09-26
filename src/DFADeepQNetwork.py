@@ -26,7 +26,7 @@ class DFADeepQNetwork:
         self.max_read_len = max_read_len
         self.gpu_enabled = gpu_enabled
         self.threads = threads
-        self.normalizePixel = self.getPixelNormalizationFunction(pixel_norm_type)
+        self.normalizePixel, self.getWhitePixelValue = self.getPixelNormalizationFunction(pixel_norm_type)
 
         # image_height: height of images that will represent states (ie: number of reads)
         self.image_height = n_reads
@@ -55,11 +55,10 @@ class DFADeepQNetwork:
     def normalizeBlackToWhite(self, pixel_value):
         return pixel_value / 255.0
         
-    def getPixelNormalizationFunction(self, pixel_norm_type):
+    def getPixelNormalizationFunctions(self, pixel_norm_type):
         if pixel_norm_type == 1:
-            return self.normalizeWhiteToBlack
-        return self.normalizeBlackToWhite
-        
+            return self.normalizeWhiteToBlack, lambda : 0
+        return self.normalizeBlackToWhite, lambda : 1
         
     def _build_model(self):
         # setting up Keras to perform on CPU or GPU
@@ -131,7 +130,7 @@ class DFADeepQNetwork:
             aux_h = []
             images.append(aux_h)
             for w in range(self.image_width):
-                aux_w = [0 for _ in range(len(state))]
+                aux_w = [self.getWhitePixelValue() for _ in range(len(state))]
                 aux_h.append(aux_w)
         images = [images]
         for f in range(len(state)):
