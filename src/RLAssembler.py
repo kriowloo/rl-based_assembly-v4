@@ -16,7 +16,7 @@ from State2LargerImage import State2LargerImage
 from State2MergedImage import State2MergedImage
 from State2RandomImage import State2RandomImage
 from State2ForwardImage import State2ForwardImage
-
+from State2HiddenForwardImage import State2HiddenForwardImage
 
 # start assembly after setting up params
 def _start(param_values, reads, n_reads, max_read_len):
