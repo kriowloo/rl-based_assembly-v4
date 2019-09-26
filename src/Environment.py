@@ -2,6 +2,9 @@ import os
 from State2Image import State2Image
 import random
 import math
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
 
 class Environment:
     def __init__(self, ol, reads, number_of_reads = None):
@@ -9,7 +12,7 @@ class Environment:
         self.reads = reads
         self.number_of_reads = len(self.reads) if number_of_reads is None else number_of_reads
         self.actions_taken = []
-        self.debug_episode = 0
+        self.debug_episode = 0 # debug_episode < 0 => debug OFF; otherwise, debug ON
 
     def debugImageGeneration(self, state, pm):
         pm = ("%.2f" % (pm)).replace('.','')
@@ -26,16 +29,18 @@ class Environment:
             State2Image.saveCompressedImage(state[i], self.ol.image_width, self.ol.image_height, output_file)
         
     def getInitialState(self):
-        self.debug_episode += 1
         self.actions_taken = []
         state = self.ol.getInitialState()
-        self.debugImageGeneration(state, 0)
+        if self.debug_episode >= 0:
+            self.debug_episode += 1
+            self.debugImageGeneration(state, 0)
         return state
 
     def step(self, action):
         self.actions_taken.append(action)
         img, pm = self.ol.getStateInfoForReads(self.actions_taken)
-        self.debugImageGeneration(img, pm)
+        if self.debug_episode >= 0:
+            self.debugImageGeneration(img, pm)
         stop = len(self.actions_taken) == self.number_of_reads
         # final = len(set(self.actions_taken)) == self.number_of_reads
         # reward = 0.1 if not final else pm
