@@ -1,7 +1,21 @@
 import matplotlib.pyplot as plt
 
-def plotPerformance(pms, epsilons, output_path):
-    x = range(len(epsilons))
-    plt.plot(x, epsilons)
-    plt.plot(x, pms)
-    plt.savefig(output_path)
+class Ploter:
+    def __init__(self, maxPM, output_path):
+        self.maxPM = maxPM
+        self.output_path = output_path
+        self.clearBuffer()
+        
+    def clearBuffer(self):
+        self.pms = []
+        self.epsilons = []
+        
+    def addPoint(self, pm, epsilon):
+        self.epsilons.append(epsilon)
+        self.pms.append(pm / maxPM)
+        
+    def plotPerformance(self):
+        x = range(len(self.epsilons))
+        plt.plot(x, self.epsilons)
+        plt.plot(x, self.pms)
+        plt.savefig(self.output_path)
