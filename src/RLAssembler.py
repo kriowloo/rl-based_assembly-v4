@@ -147,7 +147,7 @@ def _setParams(param_tags, required_params, param_values, default_values):
         param_name = param_tags[tag]
         value = _checkParam(param_name, sys.argv[i+1])
         if value is None:
-            print("Warning: Value assigned to '" + param_name + "' is not valid. Ignored!")
+            print("Warning: Value assigned to '" + param_name + "' (" + str(sys.argv[i+1]) + ") is not valid. Ignored!")
             continue
         param_values[param_name] = value
         if param_name in required_params:
