@@ -23,7 +23,7 @@ class Environment:
             a = "0" + a
         for i in range(len(state)):
             output_file = "img_" + e + "_" + a + "_" + pm + "_" + str(i) + ".png" 
-            State2Image.saveCompressedImage(state, self.ol.image_width, self.ol.image_height, output_file)
+            State2Image.saveCompressedImage(state[i], self.ol.image_width, self.ol.image_height, output_file)
         
     def getInitialState(self):
         self.debug_episode += 1
