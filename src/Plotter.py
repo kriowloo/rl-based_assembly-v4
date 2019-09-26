@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-class Ploter:
+class Plotter:
     def __init__(self, maxPM, output_path):
         self.maxPM = maxPM
         self.output_path = output_path
