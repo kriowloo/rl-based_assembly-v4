@@ -50,7 +50,7 @@ def _start(param_values, reads, n_reads, max_read_len):
     seed_value = param_values["seed"]
     seed_value = seed_value if seed_value >= 0 else random.randrange(sys.maxsize)
     
-    print("Setting up random seed to " + str(seed))
+    print("Setting up random seed to " + str(seed_value))
     random.seed(seed_value)
     numpy.random.seed(seed_value + 1)
     tensorflow.set_random_seed(seed_value + 2)
