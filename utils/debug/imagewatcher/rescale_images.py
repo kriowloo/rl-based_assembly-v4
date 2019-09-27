@@ -15,7 +15,7 @@ def watch(score, input_path, scale, output_path, text_width_offset = None, font_
     text = "%.2f" % round(score,2)
     if text_width_offset is None:
         text_width_offset = font.getsize(text)[0]
-    draw.text((width - text_width_offset, 0),text,font=font)
+    draw.text((width - text_width_offset - 200, 0),text,font=font)
     img.save(output_path)
 
 if __name__ == "__main__":
