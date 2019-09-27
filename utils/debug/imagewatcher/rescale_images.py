@@ -26,7 +26,7 @@ if __name__ == "__main__":
         sys.exit(1)
     font_size = 100
     scale = 20
-    prefix = new
+    prefix = "new"
     extension = "png"
     order = [0,1,2]
     if len(sys.argv) == 6:
