@@ -48,7 +48,7 @@ def _start(param_values, reads, n_reads, max_read_len):
     max_pm = param_values["max_pm"]
     plot_fig_path = param_values["plot_fig_path"]
     seed_value = param_values["seed"]
-    seed_value = seed_value if seed_value >= 0 else random.randrange(sys.maxsize)
+    seed_value = seed_value if seed_value >= 0 else random.randrange(2**32 - 1)
     
     print("Setting up random seed to " + str(seed_value))
     random.seed(seed_value)
