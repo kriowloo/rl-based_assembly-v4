@@ -47,8 +47,8 @@ def _start(param_values, reads, n_reads, max_read_len):
     pixel_norm_type = param_values["pixel_norm_type"]
     max_pm = param_values["max_pm"]
     plot_fig_path = param_values["plot_fig_path"]
-    seed = param_values["seed"]
-    seed = seed if seed >= 0 else random.randrange(sys.maxsize)
+    seed_value = param_values["seed"]
+    seed_value = seed_value if seed_value >= 0 else random.randrange(sys.maxsize)
     
     print("Setting up random seed to " + str(seed))
     random.seed(seed_value)
@@ -295,7 +295,7 @@ if __name__ == "__main__":
         "pixel_norm_type" : 0,
         "max_pm" : 0,
         "plot_fig_path" : "output.png",
-        "rseed" : -1
+        "seed" : -1
     }
     # available options to represent each state
     state_versions = {
