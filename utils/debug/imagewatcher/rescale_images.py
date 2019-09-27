@@ -19,16 +19,22 @@ def watch(score, input_path, scale, output_path, text_width_offset = None, font_
     img.save(output_path)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 6:
+    if len(sys.argv) != 6 and len(sys.argv) != 1:
         print("Usage: python3 " + sys.argv[0] + " <font_size> <scale> <prefix> <extension> <order>")
         print("Example: python3 " + sys.argv[0] + " 100 20 rescaled png 1,2,3")
         print("         - order: 1=episode, 2=action in episode, 3=pm")
         sys.exit(1)
-    font_size = int(sys.argv[1])
-    scale = int(sys.argv[2])
-    prefix = sys.argv[3]
-    extension = sys.argv[4]
-    order = [int(x)-1 for x in sys.argv[5].split(",")]
+    font_size = 100
+    scale = 20
+    prefix = new
+    extension = "png"
+    order = [0,1,2]
+    if len(sys.argv) == 6:
+        font_size = int(sys.argv[1])
+        scale = int(sys.argv[2])
+        prefix = sys.argv[3]
+        extension = sys.argv[4]
+        order = [int(x)-1 for x in sys.argv[5].split(",")]
     for file in glob.glob('*.' + extension):
         info = file.split("_")[1:4]
         output_path = prefix
