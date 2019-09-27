@@ -8,15 +8,21 @@ class Plotter:
         self.clearBuffer()
 
     def clearBuffer(self):
+        self.axis_x = []
         self.pms = []
         self.epsilons = []
 
-    def addPoint(self, pm, epsilon):
+    def addPoint(self, pm, epsilon, x = None):
+        if x is not None:
+            self.axis_x.append(x)
         self.epsilons.append(epsilon)
         self.pms.append(pm / self.maxPM)
 
     def plotPerformance(self):
-        x = range(len(self.epsilons))
+        if len(self.axis_x) != len(self.epsilons):
+            x = range(len(self.epsilons))
+        else:
+            x = self.axis_x
         plt.plot(x, self.epsilons, label='Epsilon')
         plt.plot(x, self.pms, label='Relative PM')
         plt.legend()
