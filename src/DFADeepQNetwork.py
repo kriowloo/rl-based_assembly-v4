@@ -12,6 +12,12 @@ from State2Image import State2Image
 from Plotter import Plotter
 import os
 
+#TODO: 
+# 1) Retirar Plotter de dentro deste código
+# 2) Passar Plotter para utils
+# 3) Implementar aqui apenas a possibilidade de exportar desempenho para CSV (existe um exemplo em src/tmp hardcoded para usar de exemplo)
+# 4) Documentar programas de utils/tmp (eles servem para gerar plots e para resumir os graficos)
+
 class DFADeepQNetwork:
     def _setupKerasCPU(self):
         K.set_session(K.tf.Session(config=K.tf.ConfigProto(intra_op_parallelism_threads=self.threads, inter_op_parallelism_threads=self.threads)))
