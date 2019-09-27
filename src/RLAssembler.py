@@ -4,6 +4,7 @@
 # => BioPython
 # => Keras
 # => Numpy
+# => Pillow (optional for debugging)
 
 import sys
 import os
