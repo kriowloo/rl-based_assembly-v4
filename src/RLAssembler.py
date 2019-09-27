@@ -9,6 +9,9 @@
 import sys
 import os
 from Bio import SeqIO
+import random
+import numpy
+import tensorflow
 
 from Environment import Environment
 from DFADeepQNetwork import DFADeepQNetwork
@@ -44,7 +47,14 @@ def _start(param_values, reads, n_reads, max_read_len):
     pixel_norm_type = param_values["pixel_norm_type"]
     max_pm = param_values["max_pm"]
     plot_fig_path = param_values["plot_fig_path"]
-
+    seed = param_values["seed"]
+    seed = seed if seed >= 0 else random.randrange(sys.maxsize)
+    
+    print("Setting up random seed to " + str(seed))
+    random.seed(seed_value)
+    numpy.random.seed(seed_value + 1)
+    tensorflow.set_random_seed(seed_value + 2)
+    
     # create a converter able to represent each state as image(s)
     print("Creating state2image converter...")
     ol = _getState2ImageConverter(stateversion, reads, max_read_len, swmatch, swmismatch, swgap, n_reads)
@@ -162,7 +172,7 @@ def _setParams(param_tags, required_params, param_values, default_values):
 # verify if a value is valid for a given tag (command-line parameter)
 # return None if the value is incorrect
 def _checkParam(tag, value):
-    int_tags = ["episodes", "buffer_maxlen", "buffer_batch_size", "max_actions_per_episode", "threads", "gpu_enabled"]
+    int_tags = ["episodes", "buffer_maxlen", "buffer_batch_size", "max_actions_per_episode", "threads", "gpu_enabled", "seed"]
     float_tags = ["swmatch", "swmismatch", "swgap", "max_pm"]
     perc_tags = ["gamma", "epsilon_min", "epsilon_decay", "epsilon"]
     if tag in int_tags:
@@ -240,7 +250,8 @@ if __name__ == "__main__":
         "gpu_enabled" : "flag to indicate whether GPU is disabled (gpu_enabled=0) or enabled (gpu_enabled=positive)",
         "pixel_norm_type" : "set the type of pixel normalization is going to be used (see valid values below)",
         "plot_fig_path" : "set the path of the output image file referring to the performance plot",
-        "max_pm" : "set the maximum PM value to plot performance graph (non positive values disable plot production)"
+        "max_pm" : "set the maximum PM value to plot performance graph (non positive values disable plot production)",
+        "seed" : "define random seed (set a negative value to pick a random seed automatically)"
     }
     # command-line parameters used to set up each parameter
     param_tags = {
@@ -260,7 +271,8 @@ if __name__ == "__main__":
         "-gpu" : "gpu_enabled", # flag indicating the use (or not) of gpu
         "-norm" : "pixel_norm_type",
         "-maxpm" : "max_pm",
-        "-plotpath" : "plot_fig_path"
+        "-plotpath" : "plot_fig_path",
+        "-rseed" : "seed"
     }
     required_params = [
         "episodes",
@@ -282,7 +294,8 @@ if __name__ == "__main__":
         "gpu_enabled" : 0,
         "pixel_norm_type" : 0,
         "max_pm" : 0,
-        "plot_fig_path" : "output.png"
+        "plot_fig_path" : "output.png",
+        "rseed" : -1
     }
     # available options to represent each state
     state_versions = {
