@@ -12,7 +12,7 @@ class Environment:
         self.reads = reads
         self.number_of_reads = len(self.reads) if number_of_reads is None else number_of_reads
         self.actions_taken = []
-        self.debug_episode = 0 # debug_episode < 0 => debug OFF; otherwise, debug ON
+        self.debug_episode = -1 # debug_episode < 0 => debug OFF; otherwise, debug ON
 
     def debugImageGeneration(self, state, pm):
         pm = ("%.2f" % (pm)).replace('.','')
