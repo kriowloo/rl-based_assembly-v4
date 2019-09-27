@@ -4,7 +4,7 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
-def watch(score, input_path, scale, output_path, text_width_offset = None, font_size = 100):
+def watch(score, input_path, scale, output_path, text_width_offset = None, font_size = 100, episode = None):
     font = ImageFont.truetype("DejaVuSansMono-Bold.ttf", font_size)
     img = Image.open(input_path)
     width, height = img.size
@@ -12,7 +12,8 @@ def watch(score, input_path, scale, output_path, text_width_offset = None, font_
     height *= scale
     img = img.resize((width, height), Image.NEAREST)
     draw = ImageDraw.Draw(img)
-    text = "%.2f" % round(score,2)
+    text = "" if episode is None else "(" + str(episode) + ") "
+    text += "%.2f" % round(score,2)
     if text_width_offset is None:
         text_width_offset = font.getsize(text)[0]
     draw.text((width - text_width_offset - 200, 0),text,font=font)
@@ -42,4 +43,4 @@ if __name__ == "__main__":
             output_path += "_" + info[x]
         output_path += "." + extension
         score = int(info[2]) / 100.0
-        watch(score, file, scale, output_path, font_size)
+        watch(score, file, scale, output_path, font_size, int(info[0]))
