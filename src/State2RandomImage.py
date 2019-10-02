@@ -18,5 +18,5 @@ class State2RandomImage(State2Image):
     # return two information (1- image(s) representation for the reads and 2- PM for the reads)
     def getStateInfoForReads(self, read_ids_order):
         o = read_ids_order[::-1] if (random.randint(0, 1) == 0) else read_ids_order
-        image, pm = self._getCompressedImageForReads(o)
-        return [image], pm
+        image, info = self._getCompressedImageAndInfoForReads(o)
+        return [image], info

@@ -15,8 +15,10 @@ class State2LargerImage(State2Image):
 
     # return two information (1- image(s) representation for the reads and 2- PM for the reads)
     def getStateInfoForReads(self, read_ids_order):
-        image1, pm1 = self._getCompressedImageForReads(read_ids_order)
-        image2, pm2 = self._getCompressedImageForReads(read_ids_order[::-1])
+        image1, aux = self._getCompressedImageAndInfoForReads(read_ids_order)
+        aux1 = aux
+        image2, aux = self._getCompressedImageAndInfoForReads(read_ids_order[::-1])
+        aux2 = aux
         max_width = None
         max_image = None
         w1 = 0
@@ -40,8 +42,8 @@ class State2LargerImage(State2Image):
                     max_image = 2
         if max_image == 1:
             image = image1
-            pm = pm1
+            info = aux1
         else:
             image = image2
-            pm = pm2
-        return [image], pm
+            info = aux2
+        return [image], info

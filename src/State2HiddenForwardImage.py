@@ -7,7 +7,7 @@ class State2HiddenForwardImage(State2ForwardImage):
 
     # return two information (1- image(s) representation for the reads and 2- PM for the reads)
     def getStateInfoForReads(self, read_ids_order):
-        image1, pm1 = super().getStateInfoForReads(read_ids_order)
+        image1, info = super().getStateInfoForReads(read_ids_order)
         image1 = image1[0]
         hide = False
         for i in range(1,len(image1)):
@@ -17,4 +17,4 @@ class State2HiddenForwardImage(State2ForwardImage):
                     hide = True
             if hide:
                 image1[i] = (-1, None)
-        return [image1], pm1
+        return [image1], info

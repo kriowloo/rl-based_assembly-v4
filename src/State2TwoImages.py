@@ -15,6 +15,7 @@ class State2TwoImages(State2Image):
 
     # return two information (1- image(s) representation for the reads and 2- PM for the reads)
     def getStateInfoForReads(self, read_ids_order):
-        image1, pm1 = self._getCompressedImageForReads(read_ids_order)
-        image2, pm2 = self._getCompressedImageForReads(read_ids_order[::-1])
-        return [image1, image2], pm1
+        image1, info = self._getCompressedImageAndInfoForReads(read_ids_order)
+        image2, _ = self._getCompressedImageAndInfoForReads(read_ids_order[::-1])
+        info["breaks"] = 0
+        return [image1, image2], info

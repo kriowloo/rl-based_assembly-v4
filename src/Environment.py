@@ -38,16 +38,20 @@ class Environment:
 
     def step(self, action):
         self.actions_taken.append(action)
-        img, pm = self.ol.getStateInfoForReads(self.actions_taken)
+        img, info = self.ol.getStateInfoForReads(self.actions_taken)
+        pm = info["pm"]
         if self.debug_episode >= 0:
             self.debugImageGeneration(img, pm)
-        stop = len(self.actions_taken) == self.number_of_reads
+        stop = self.isStopable(img, info)
         # final = len(set(self.actions_taken)) == self.number_of_reads
         # reward = 0.1 if not final else pm
         next_state = img
         reward = pm
         # self.debug(next_state)
         return next_state, reward, stop
+
+    def isStopable(self, img, info):
+        return len(self.actions_taken) == self.number_of_reads
 
     def getActionFromExploration(self):
         # return self._getRandomActionWithoutRepeat()

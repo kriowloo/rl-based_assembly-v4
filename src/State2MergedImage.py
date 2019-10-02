@@ -15,8 +15,8 @@ class State2MergedImage(State2Image):
 
     # return two information (1- image(s) representation for the reads and 2- PM for the reads)
     def getStateInfoForReads(self, read_ids_order):
-        zip1, pm1 = self._getCompressedImageForReads(read_ids_order)
-        zip2, pm2 = self._getCompressedImageForReads(read_ids_order[::-1])
+        zip1, info = self._getCompressedImageAndInfoForReads(read_ids_order)
+        zip2, _ = self._getCompressedImageAndInfoForReads(read_ids_order[::-1])
         img1 = State2Image.decompressImage(zip1, self.image_width, self.image_height)
         img2 = State2Image.decompressImage(zip2, self.image_width, self.image_height)
 
@@ -85,4 +85,6 @@ class State2MergedImage(State2Image):
             image.append((s, pixels))
 
         # merge
-        return [image], pm1
+        info["breaks"] = 0
+        return [image], info
+

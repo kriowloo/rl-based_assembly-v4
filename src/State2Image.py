@@ -71,7 +71,7 @@ class State2Image:
     # ids 5, 2 and 7 has been already built, the construction of the image
     # corresponding to reads 5, 2, 7 and 3 need only to produce the pixels
     # of the last row, because all others have already been produced)
-    def _getCompressedImageForReads(self, read_ids):
+    def _getCompressedImageAndInfoForReads(self, read_ids):
         image = self.getEmptyCompressedImage(self.image_height)
         cur_state = self.root_image_search
         if type(read_ids) == list:
@@ -83,7 +83,7 @@ class State2Image:
                 cur_state = self._getNextState(cur_state, read_id, repeat)
                 aux_repeat.add(read_id)
                 image[cur_state["row"]] = (cur_state["col"], cur_state["pixels"])
-        return image, cur_state["pm"]
+        return image, {"pm": cur_state["pm"], "breaks" : cur_state["breaks"]}
 
     # navigate within the preffix tree to find the next node considering
     # the current node and the next read to be incorporated (identified by

@@ -15,5 +15,5 @@ class State2ForwardImage(State2Image):
 
     # return two information (1- image(s) representation for the reads and 2- PM for the reads)
     def getStateInfoForReads(self, read_ids_order):
-        image1, pm1 = self._getCompressedImageForReads(read_ids_order)
-        return [image1], pm1
+        image1, info = self._getCompressedImageAndInfoForReads(read_ids_order)
+        return [image1], info
