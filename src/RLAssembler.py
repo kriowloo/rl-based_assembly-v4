@@ -5,6 +5,7 @@
 # => Keras
 # => Numpy
 # => Pillow (optional for debugging)
+# => Matplotlib (optional for debugging)
 
 import sys
 import os
