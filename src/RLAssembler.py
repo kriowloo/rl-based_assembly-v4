@@ -23,6 +23,7 @@ from State2MergedImage import State2MergedImage
 from State2RandomImage import State2RandomImage
 from State2ForwardImage import State2ForwardImage
 from State2HiddenForwardImage import State2HiddenForwardImage
+from State2ThreeForwardImages import State2ThreeForwardImages
 
 # start assembly after setting up params
 def _start(param_values, reads, n_reads, max_read_len):
@@ -31,7 +32,6 @@ def _start(param_values, reads, n_reads, max_read_len):
     _showParams(param_values, n_reads, max_read_len)
 
     # retrieve command-line params
-    frames_per_state = param_values["frames_per_state"]
     buffer_maxlen = param_values["buffer_maxlen"]
     epsilon = param_values["epsilon"]
     epsilon_decay = param_values["epsilon_decay"]
@@ -61,7 +61,7 @@ def _start(param_values, reads, n_reads, max_read_len):
     # create a converter able to represent each state as image(s)
     print("Creating state2image converter...")
     ol = _getState2ImageConverter(stateversion, reads, max_read_len, swmatch, swmismatch, swgap, n_reads)
-
+    frames_per_state = ol.countFramesPerState()
     # pm = ol._getCompressedImageAndInfoForReads([9,8,7,6,5,4,3,2,1])[1]["pm"]
     # pm = ol._getCompressedImageAndInfoForReads([9,0, 1, 3, 19, 20, 21, 27,8, 10, 23,29,22,25,11, 15, 17,2, 6, 7, 13, 14, 18,24, 26, 28,5,12, 16,4])[1]["pm"]
     # print(pm)
@@ -105,6 +105,8 @@ def _getState2ImageConverter(sv, reads, max_read_len, match, mismatch, gap, n_re
         return State2ForwardImage(reads, max_read_len, match, mismatch, gap, n_reads)
     if sv == 6:
         return State2HiddenForwardImage(reads, max_read_len, match, mismatch, gap, n_reads)
+    if sv == 7:
+        return State2ThreeForwardImages(reads, max_read_len, match, mismatch, gap, n_reads)
     return None
 
 # show how to use the software
@@ -186,7 +188,6 @@ def _setParams(param_tags, required_params, param_values, default_values):
             required.add(param_name)
     if len(set(required_params)) != len(required):
         return None, None, None
-    param_values["frames_per_state"] = 2 if param_values["stateversion"] == 1 else 1
     return _getReads(sys.argv[len(sys.argv) - 1])
 
 
@@ -213,7 +214,7 @@ def _checkParam(tag, value):
         if not value.isdigit():
             return None
         value = int(value)
-        return value if value >= 1 and value <= 6 else None
+        return value if value >= 1 and value <= 7 else None
     if tag == "env_type":
         if not value.isdigit():
             return None
@@ -333,7 +334,8 @@ if __name__ == "__main__":
         "3": "one image for each state (both images from type 1 merged)",
         "4": "one image for each state (one of the two images from type 1 is randomly choosen)",
         "5": "one image for each state (only the image that read order correspond to the exact order found in the state)",
-        "6": "one image for each state (equals to version 5), but without misalignment between reads"
+        "6": "one image for each state (equals to version 5), but without misalignment between reads",
+        "7": "three images for each state (similar to version 5, but two previous states are also embedded)"
     }
     # available options to represent environment
     env_types = {
