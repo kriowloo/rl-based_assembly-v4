@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Dense, Conv2D, Flatten, Lambda
+from keras.layers import Dense, Conv2D, Flatten, Lambda, Dropout
 from keras.optimizers import RMSprop
 from numpy.random import randint, seed, rand
 import numpy as np
@@ -90,6 +90,7 @@ class DFADeepQNetwork:
         model.add(Dense(256, activation='relu'))
         # model.add(Dense(128, activation='relu'))
         # model.add(Dense(self.n_reads, activation='softmax'))
+        model.add(Dropout(0.5))
         model.add(Dense(self.n_reads))
         optimizer = RMSprop(lr=0.00025, rho=0.95, epsilon=0.01)
         model.compile(optimizer, loss='mse')
