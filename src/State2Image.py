@@ -6,6 +6,10 @@ class State2Image:
     def getInitialState(self):
         pass
 
+    # return the number of images used to represent each state 
+    def countFramesPerState(self):
+        pass
+
     # return two information (1- image(s) representation for the reads and 2- PM for the reads)
     def getStateInfoForReads(self, reads):
         pass

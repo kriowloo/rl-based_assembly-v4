@@ -5,6 +5,9 @@ class State2MergedImage(State2Image):
         super().__init__(match, mismatch, gap, reads, max_read_len, n_reads)
         self.init = None
 
+    def countFramesPerState(self):
+        return 1
+
     # return two empty images that correspond to the initial state of
     # state space
     def getInitialState(self):
