@@ -157,6 +157,15 @@ class DFADeepQNetwork:
         return array
 
     def debug(self, state, array):
+        for i in range(len(state)):
+            if state[i][0][0] == -1:
+                return
+        for im in state:
+            print(im)
+        print(array)
+        sys.exit(0)
+
+    def debug1(self, state, array):
         token = '/data/debug.txt'
         if os.path.exists(token):
             os.remove(token)
