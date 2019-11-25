@@ -96,6 +96,15 @@ class DFADeepQNetwork:
         model.compile(optimizer, loss='mse')
         return model
 
+    # debbuging method to produce ALWAYS actions in descending order
+    def _act1(self, state, training = True):
+        try: self.debugX
+        except: self.debugX = self.n_reads
+        if self.debugX == 0:
+            self.debugX = self.n_reads
+        self.debugX -= 1
+        return self.debugX
+
     # define which action is going to be taken at the next step (e-greedy)
     def _act(self, state, training = True):
         if training and np.random.rand() <= self.epsilon:
@@ -153,7 +162,7 @@ class DFADeepQNetwork:
                 for j in range(len(pixels)):
                     images[0][i][start_col + j][f] = self.normalizePixel(pixels[j])
         array = np.array(images)
-        # self.debug(state, array)
+        self.debug(state, array)
         return array
 
     def debug(self, state, array):
@@ -163,6 +172,7 @@ class DFADeepQNetwork:
         for im in state:
             print(im)
         print(array)
+        np.save("foo", array)
         sys.exit(0)
 
     def debug1(self, state, array):

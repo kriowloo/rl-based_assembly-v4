@@ -14,7 +14,7 @@ class State2Image:
     def getStateInfoForReads(self, reads):
         pass
 
-    def __init__(self, match, mismatch, gap, reads, max_read_len = None, number_of_reads = None):
+    def __init__(self, match, mismatch, gap, reads, max_read_len = None, number_of_reads = None, nucleotides_in_grayscale = True):
         self.reads = reads
         self.number_of_reads = number_of_reads if number_of_reads is not None else len(reads)
         if max_read_len is None:
@@ -22,6 +22,7 @@ class State2Image:
                  if max_read_len is None or len(read) > max_read_len:
                         max_read_len = len(read)
         self.max_read_len = max_read_len
+        self.nucleotides_in_grayscale = nucleotides_in_grayscale
         self.image_width = self._getMaxWidth()
         self.image_height = self.number_of_reads
         self.match = match
@@ -129,7 +130,16 @@ class State2Image:
 
     # define a pixel value for each nucleotide
     def _getPixelValue(self, nucleotide):
+        return self._getGrayPixelValue(nucleotide) if self.nucleotides_in_grayscale else self._getBlackPixelValue(nucleotide)
+
+    # define a pixel value for each nucleotide in grayscale
+    def _getGrayPixelValue(self, nucleotide):
         return ['A', 'C', 'G', 'T'].index(nucleotide) * 30 + 135
+
+    # define a pixel value for each nucleotide in black and white
+    def _getBlackPixelValue(self, nucleotide):
+        return 0
+
 
     # calculate Smith-Waterman score for two reads (identified by their
     # positions at self.reads)

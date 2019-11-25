@@ -52,6 +52,7 @@ def _start(param_values, reads, n_reads, max_read_len):
     plot_fig_path = param_values["plot_fig_path"]
     seed_value = param_values["seed"]
     seed_value = seed_value if seed_value >= 0 else random.randrange(2**32 - 1)
+    nucleotides_in_grayscale = param_values["nucleotide_color"] == 1
 
     print("Setting up random seed to " + str(seed_value))
     random.seed(seed_value)
@@ -60,7 +61,7 @@ def _start(param_values, reads, n_reads, max_read_len):
 
     # create a converter able to represent each state as image(s)
     print("Creating state2image converter...")
-    ol = _getState2ImageConverter(stateversion, reads, max_read_len, swmatch, swmismatch, swgap, n_reads)
+    ol = _getState2ImageConverter(stateversion, reads, max_read_len, swmatch, swmismatch, swgap, n_reads, nucleotides_in_grayscale)
     frames_per_state = ol.countFramesPerState()
     # pm = ol._getCompressedImageAndInfoForReads([9,8,7,6,5,4,3,2,1])[1]["pm"]
     # pm = ol._getCompressedImageAndInfoForReads([9,0, 1, 3, 19, 20, 21, 27,8, 10, 23,29,22,25,11, 15, 17,2, 6, 7, 13, 14, 18,24, 26, 28,5,12, 16,4])[1]["pm"]
@@ -92,25 +93,25 @@ def _getEnvironment(ol, reads, n_reads, env_type):
     return None
 
 # return an instance of a converter to transform any state in a set of images
-def _getState2ImageConverter(sv, reads, max_read_len, match, mismatch, gap, n_reads):
+def _getState2ImageConverter(sv, reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale):
     if sv == 1:
-        return State2TwoImages(reads, max_read_len, match, mismatch, gap, n_reads)
+        return State2TwoImages(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
     if sv == 2:
-        return State2LargerImage(reads, max_read_len, match, mismatch, gap, n_reads)
+        return State2LargerImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
     if sv == 3:
-        return State2MergedImage(reads, max_read_len, match, mismatch, gap, n_reads)
+        return State2MergedImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
     if sv == 4:
-        return State2RandomImage(reads, max_read_len, match, mismatch, gap, n_reads)
+        return State2RandomImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
     if sv == 5:
-        return State2ForwardImage(reads, max_read_len, match, mismatch, gap, n_reads)
+        return State2ForwardImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
     if sv == 6:
-        return State2HiddenForwardImage(reads, max_read_len, match, mismatch, gap, n_reads)
+        return State2HiddenForwardImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
     if sv == 7:
-        return State2ThreeForwardImages(reads, max_read_len, match, mismatch, gap, n_reads)
+        return State2ThreeForwardImages(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
     return None
 
 # show how to use the software
-def printUsage(param_descriptions, required_params, param_tags, state_versions, env_types, pixel_norm_types, default_values):
+def printUsage(param_descriptions, required_params, param_tags, state_versions, env_types, pixel_norm_types, nucleotide_colors, default_values):
     optional = {}
     print("Error to run RLAssembler.")
     print()
@@ -151,6 +152,16 @@ def printUsage(param_descriptions, required_params, param_tags, state_versions, 
     sorted_env_types.sort()
     for key in sorted_env_types:
         val = env_types[key]
+        print("\t" + key + ": " + val + ";")
+
+    print()
+    print("Nucleotide color corresponds to the color of each nucleotide of the reads. The following options are available:")
+    sorted_nucleotide_colors = []
+    for key in nucleotide_colors.keys():
+        sorted_nucleotide_colors.append(key)
+    sorted_nucleotide_colors.sort()
+    for key in sorted_nucleotide_colors:
+        val = nucleotide_colors[key]
         print("\t" + key + ": " + val + ";")
 
     print()
@@ -215,7 +226,7 @@ def _checkParam(tag, value):
             return None
         value = int(value)
         return value if value >= 1 and value <= 7 else None
-    if tag == "env_type":
+    if tag == "env_type" or tag == "nucleotide_color":
         if not value.isdigit():
             return None
         value = int(value)
@@ -225,6 +236,7 @@ def _checkParam(tag, value):
             return None
         value = int(value)
         return value if value >= 0 and value <= 1 else None
+    
     if tag == "plot_fig_path":
         if value != "":
             return value
@@ -279,7 +291,8 @@ if __name__ == "__main__":
         "pixel_norm_type" : "set the type of pixel normalization is going to be used (see valid values below)",
         "plot_fig_path" : "set the path of the output image file referring to the performance plot",
         "max_pm" : "set the maximum PM value to plot performance graph (non positive values disable plot production)",
-        "seed" : "define random seed (set a negative value to pick a random seed automatically)"
+        "seed" : "define random seed (set a negative value to pick a random seed automatically)",
+        "nucleotide_color": "define the color of nucleotides in read (1=nucleotides in different gray tones; 2=all nucleotides in black)"
     }
     # command-line parameters used to set up each parameter
     param_tags = {
@@ -301,7 +314,8 @@ if __name__ == "__main__":
         "-norm" : "pixel_norm_type",
         "-maxpm" : "max_pm",
         "-plotpath" : "plot_fig_path",
-        "-rseed" : "seed"
+        "-rseed" : "seed",
+        "-nucleo" : "nucleotide_color"
     }
     required_params = [
         "episodes",
@@ -325,7 +339,8 @@ if __name__ == "__main__":
         "max_pm" : 0,
         "plot_fig_path" : "output.png",
         "seed" : -1,
-        "env_type" : 1
+        "env_type" : 1,
+        "nucleotide_color" : 1
     }
     # available options to represent each state
     state_versions = {
@@ -339,18 +354,22 @@ if __name__ == "__main__":
     }
     # available options to represent environment
     env_types = {
-        "1": "Regular environment, where only final states are stopping states",
-        "2": "Adapted environment where states with full misalignment between the two last reads are stopping states, beyond final states"
+        "1": "regular environment, where only final states are stopping states",
+        "2": "adapted environment where states with full misalignment between the two last reads are stopping states, beyond final states"
     }
     pixel_norm_types = {
       "0": "convert pixel values by dividing actual values by 255 - thus black and white pixels will be normalized to zero and one respectively",
       "1": "convert pixel values so that white pixels will be normalized to zero and black pixels to one (formula: (255 - pixel) / 255)"
     }
+    nucleotide_colors = {
+      "1": "Reads are represented in grayscale",
+      "2": "Reads are represented in black and white"
+    }
     # dict to store all param values
     param_values = {}
     reads, n_reads, max_read_len = _setParams(param_tags, required_params, param_values, default_values)
     if reads is None:
-        printUsage(param_descriptions, required_params, param_tags, state_versions, env_types, pixel_norm_types, default_values)
+        printUsage(param_descriptions, required_params, param_tags, state_versions, env_types, pixel_norm_types, nucleotide_colors, default_values)
         sys.exit(1)
 
     _start(param_values, reads, n_reads, max_read_len)
