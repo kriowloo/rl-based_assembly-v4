@@ -162,7 +162,7 @@ class DFADeepQNetwork:
                 for j in range(len(pixels)):
                     images[0][i][start_col + j][f] = self.normalizePixel(pixels[j])
         array = np.array(images)
-        self.debug(state, array)
+        # self.debug(state, array)
         return array
 
     def debug(self, state, array):
