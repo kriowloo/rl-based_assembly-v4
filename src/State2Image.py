@@ -97,7 +97,7 @@ class State2Image:
     # its order in self.reads)
     def _getNextState(self, cur_state, next_read_id, repeat):
         if repeat:
-            raise Exception('State2Image:_getNextState=>Repeat found to add read "' + str(next_read_id) + ' from state ' + cur_state)
+            raise Exception('State2Image:_getNextState=>Repeat found to add read "' + str(next_read_id) + ' from state ' + str(cur_state))
         if next_read_id not in cur_state:
             next_state = {}
             cur_state[next_read_id] = next_state
