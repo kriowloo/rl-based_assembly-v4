@@ -204,6 +204,7 @@ class DFADeepQNetwork:
         for e in range(episodes):
             # reset state in the beginning of each episode
             state = self.env.getInitialState()
+            acc_reward = 0.0
             print("episode: " + str(e+1))
             time_t = 1 # action counter of the episode
             while True:
@@ -214,13 +215,13 @@ class DFADeepQNetwork:
                 next_state, reward, stop = self.env.step(action)
 
                 print(str(action) + " " + str(reward))
-
+                acc_reward += reward
                 self._remember(state, action, reward, next_state, stop)
                 state = next_state
 
                 if stop or (max_actions_per_episode > 0 and time_t >= max_actions_per_episode):
                     # print episode id and the number of actions taken on it
-                    print("episode: {}/{}, reward: {}, epsilon: {}".format(e+1, episodes, reward, self.epsilon))
+                    print("episode: {}/{}, reward: {}, epsilon: {}".format(e+1, episodes, acc_reward, self.epsilon))
                     if self.plotter is not None:
                         self.plotter.addPoint(reward, self.epsilon)
                     break
@@ -238,12 +239,15 @@ class DFADeepQNetwork:
         state = self.env.getInitialState()
         action_counter = 0 # action counter of the episode
         stop = False
+        acc_reward = 0.0
         while True:
             if action_counter >= n_actions or stop:
                 break
             action = self._act(state, False)
             # Advance the environment to the next state based on the action.
             next_state, reward, stop = self.env.step(action)
+            acc_reward += reward
             state = next_state
             action_counter += 1
             print(str(action) + " " + str(reward))
+        print("Acc. reward: " + str(acc_reward))

@@ -25,6 +25,7 @@ class State2Image:
         self.nucleotides_in_grayscale = nucleotides_in_grayscale
         self.image_width = self._getMaxWidth()
         self.image_height = self.number_of_reads
+        self.overlap_factor = 1.0 / (max_read_len * number_of_reads)
         self.match = match
         self.mismatch = mismatch
         self.gap = gap
@@ -34,7 +35,7 @@ class State2Image:
     # partial images that have already been built
     def clearBuffer(self):
         self.overlap_positions = {}
-        self.root_image_search = {"row" : -1, "col" : 0, "read_id" : -1, "pm" : 0.0, "breaks" : 0, "original_pm" : 0}
+        self.root_image_search = {"row" : -1, "col" : 0, "read_id" : -1, "pm" : 0.0, "breaks" : 0, "original_pm" : 0, "reward" : 0.0}
         self.sw_scores = {}
 
     # return the maximum width for this object
@@ -88,12 +89,14 @@ class State2Image:
                 cur_state = self._getNextState(cur_state, read_id, repeat)
                 aux_repeat.add(read_id)
                 image[cur_state["row"]] = (cur_state["col"], cur_state["pixels"])
-        return image, {"pm": cur_state["pm"], "breaks" : cur_state["breaks"]}
+        return image, {"reward": cur_state["reward"], "breaks" : cur_state["breaks"]}
 
     # navigate within the preffix tree to find the next node considering
     # the current node and the next read to be incorporated (identified by
     # its order in self.reads)
     def _getNextState(self, cur_state, next_read_id, repeat):
+        if repeat:
+            raise Exception('State2Image:_getNextState=>Repeat found to add read "' + str(next_read_id) + ' from state ' + cur_state)
         if next_read_id not in cur_state:
             next_state = {}
             cur_state[next_read_id] = next_state
@@ -101,7 +104,8 @@ class State2Image:
             next_state["row"] = cur_state["row"] + 1
             cur_read_id = cur_state["read_id"]
             overlap = self.getOverlapPosition(cur_read_id, next_read_id)
-            cur_read_len = 1 if cur_read_id == -1 else len(self.reads[cur_read_id])
+            overlap_len = 0 if cur_read_id == -1 else len(self.reads[cur_read_id][overlap:])
+            #cur_read_len = 1 if cur_read_id == -1 else len(self.reads[cur_read_id])
             #offset = overlap if overlap != -1 else 0
             #next_state["col"] = cur_state["col"] + offset
             next_state["col"] = 0 if overlap == -1 else cur_state["col"] + overlap
@@ -112,6 +116,15 @@ class State2Image:
             n_reads_of_state = next_state["row"] + 1
             factor = (n_reads_of_state - next_state["breaks"]) / n_reads_of_state
             next_state["pm"] = next_state["original_pm"] * factor
+            # next_state["reward"] = next_state["pm"]
+            if cur_read_id == -1:
+                next_state["reward"] = 0.1
+            elif next_state["breaks"] > 0:
+                next_state["reward"] = -0.1
+            else:
+                next_state["reward"] = overlap_len * self.overlap_factor
+                if n_reads_of_state == self.number_of_reads:
+                    next_state["reward"] += 1
             # next_state["pm"] = 0.1 if n_reads_of_state != self.number_of_reads else next_state["original_pm"] * factor
             # next_state["pm"] = 0 if repeat else cur_state["pm"] + self.sw(cur_read_id, next_read_id)
             # next_state["pm"] *= 2 if next_state["row"] + 1 == self.number_of_reads and not repeat else 1

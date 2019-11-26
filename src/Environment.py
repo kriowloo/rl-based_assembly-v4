@@ -39,7 +39,7 @@ class Environment:
     def step(self, action):
         self.actions_taken.append(action)
         img, info = self.ol.getStateInfoForReads(self.actions_taken)
-        pm = info["pm"]
+        pm = info["reward"]
         if self.debug_episode >= 0:
             self.debugImageGeneration(img, pm)
         stop = self.isStopable(img, info)
