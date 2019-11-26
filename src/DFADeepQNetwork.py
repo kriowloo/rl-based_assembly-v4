@@ -99,8 +99,20 @@ class DFADeepQNetwork:
         model.compile(optimizer, loss='mse')
         return model
 
+    def _act3(self, state, training = True):
+        try: self.debugY
+        except: self.debugY = None
+        if state[0][0][0] == -1:
+            if np.random.rand() <= 0.5:
+                self.debugY = 2
+                return self._act2(state, training)
+            self.debugY = 1
+            return self._act1(state, training)
+        else:
+            return self._act1(state, training) if self.debugY == 1 else self._act2(state, training)
+
     # debbuging method to produce ALWAYS actions in descending order
-    def _act1(self, state, training = True):
+    def _act2(self, state, training = True):
         try: self.debugX
         except: self.debugX = self.n_reads
         if self.debugX == 0:
@@ -233,8 +245,7 @@ class DFADeepQNetwork:
                         self.plotter.addPoint(reward, self.epsilon)
                     break
                 time_t += 1
-            # train the agent with the experience of the episode
-            self._replay(buffer_batch_size)
+                self._replay(buffer_batch_size)
             self._decay_epsilon()
         if self.plotter is not None:
             self.plotter.plotPerformance()
