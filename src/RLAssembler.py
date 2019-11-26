@@ -54,6 +54,7 @@ def _start(param_values, reads, n_reads, max_read_len):
     seed_value = seed_value if seed_value >= 0 else random.randrange(2**32 - 1)
     nucleotides_in_grayscale = param_values["nucleotide_color"] == 1
     reward_system = param_values["reward_system"]
+    double_dqn_reset = param_values["double_dqn_reset"]
 
     print("Setting up random seed to " + str(seed_value))
     random.seed(seed_value)
@@ -75,7 +76,7 @@ def _start(param_values, reads, n_reads, max_read_len):
 
     # create intelligent agent
     print("Creating a DQN for DFA problem...")
-    agent = DFADeepQNetwork(n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled, pixel_norm_type, plot_fig_path, max_pm)
+    agent = DFADeepQNetwork(n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled, pixel_norm_type, plot_fig_path, max_pm, double_dqn_reset)
 
     # start training
     print("Starting training...")
@@ -216,7 +217,7 @@ def _setParams(param_tags, required_params, param_values, default_values):
 # verify if a value is valid for a given tag (command-line parameter)
 # return None if the value is incorrect
 def _checkParam(tag, value):
-    int_tags = ["episodes", "buffer_maxlen", "buffer_batch_size", "max_actions_per_episode", "threads", "gpu_enabled", "seed"]
+    int_tags = ["episodes", "buffer_maxlen", "buffer_batch_size", "max_actions_per_episode", "threads", "gpu_enabled", "seed", "double_dqn_reset"]
     float_tags = ["swmatch", "swmismatch", "swgap", "max_pm"]
     perc_tags = ["gamma", "epsilon_min", "epsilon_decay", "epsilon"]
     if tag in int_tags:
@@ -304,7 +305,8 @@ if __name__ == "__main__":
         "max_pm" : "set the maximum PM value to plot performance graph (non positive values disable plot production)",
         "seed" : "define random seed (set a negative value to pick a random seed automatically)",
         "nucleotide_color": "define the color of nucleotides in read (1=nucleotides in different gray tones; 2=all nucleotides in black)",
-        "reward_system" : "define the reward system (see valid values below)"
+        "reward_system" : "define the reward system (see valid values below)",
+        "double_dqn_reset" : "number of replays required to copy main CNN weights to auxiliary CNN (0 acts like a single DQN)"
     }
     # command-line parameters used to set up each parameter
     param_tags = {
@@ -328,7 +330,8 @@ if __name__ == "__main__":
         "-plotpath" : "plot_fig_path",
         "-rseed" : "seed",
         "-nucleo" : "nucleotide_color",
-        "-reward" : "reward_system"
+        "-reward" : "reward_system",
+        "-reset_dqn" : "double_dqn_reset"
     }
     required_params = [
         "episodes",
@@ -354,7 +357,8 @@ if __name__ == "__main__":
         "seed" : -1,
         "env_type" : 1,
         "nucleotide_color" : 1,
-        "reward_system" : 1
+        "reward_system" : 1,
+        "double_dqn_reset" : 0
     }
     # available options to represent each state
     state_versions = {
@@ -381,7 +385,7 @@ if __name__ == "__main__":
     }
     reward_systems = {
       "1": "Rewards use Smith-Waterman score",
-      "2": "Rewards use suffix-prefix score"
+      "2": "Rewards use suffix-prefix score (0.1 for actions taken from initial state; -0.1 for actions leading to misalignment; last_overlap/(read_max_len*n_reads) for other actions (plus 1 to actions leading to terminal states)"
     }
     # dict to store all param values
     param_values = {}

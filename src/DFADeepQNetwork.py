@@ -1,4 +1,4 @@
-from keras.models import Sequential
+from keras.models import Sequential, clone_model
 from keras.layers import Dense, Conv2D, Flatten, Lambda, Dropout
 from keras.optimizers import RMSprop
 from numpy.random import randint, seed, rand
@@ -27,13 +27,15 @@ class DFADeepQNetwork:
         session = tf.Session(config=config)
         tensorflow_backend.set_session(session)
 
-    def __init__(self, n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled = False, pixel_norm_type = 1, plot_fig_path = None, maxPM = None):
+    def __init__(self, n_reads, max_read_len, frames_per_state, buffer_maxlen, epsilon, epsilon_decay, epsilon_min, gamma, threads, env, gpu_enabled = False, pixel_norm_type = 1, plot_fig_path = None, maxPM = None, reset_prime_after = 500):
         self.env = env
         self.n_reads = n_reads
         self.max_read_len = max_read_len
         self.gpu_enabled = gpu_enabled
         self.threads = threads
         self.normalizePixel, self.getWhitePixelValue = self.getPixelNormalizationFunctions(pixel_norm_type)
+        self.reset_prime_after = reset_prime_after
+        self.number_of_replays = 0
         # (plot_fig_path = path to plot the performance figure; is None, no figure is saved)
         self.plotter = None if plot_fig_path is None or maxPM is None or maxPM <= 0 else Plotter(maxPM, plot_fig_path)
 
@@ -57,6 +59,7 @@ class DFADeepQNetwork:
 
         # build CNN
         self.model = self._build_model()
+        self.modelPrime = clone_model(self.model)
 
     def normalizeWhiteToBlack(self, pixel_value):
         return (255 - pixel_value) / 255.0
@@ -136,11 +139,15 @@ class DFADeepQNetwork:
         for state, action, reward, next_state, done in minibatch:
             target = reward
             if not done:
-                target = reward + self.gamma * np.amax(self.model.predict(self._stateToCNN(next_state))[0])
+                target = reward + self.gamma * np.amax(self.modelPrime.predict(self._stateToCNN(next_state))[0])
             state_inputcnn = self._stateToCNN(state)
             target_f = self.model.predict(state_inputcnn)
             target_f[0][action] = target
             self.model.fit(state_inputcnn, target_f, epochs=1, verbose=0)
+            self.number_of_replays += 1
+            if self.number_of_replays >= self.reset_prime_after:
+                self.number_of_replays = 0
+                self.modelPrime.set_weights(self.model.get_weights())
 
     # transform compressed image to a numpy array compatible with keras (data_format=channel_last)
     def _stateToCNN(self, state):
