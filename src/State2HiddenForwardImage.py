@@ -2,8 +2,8 @@ from State2ForwardImage import State2ForwardImage
 import numpy as np
 
 class State2HiddenForwardImage(State2ForwardImage):
-    def __init__(self, reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale):
-        super().__init__(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
+    def __init__(self, reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system):
+        super().__init__(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system)
 
     # return two information (1- image(s) representation for the reads and 2- PM for the reads)
     def getStateInfoForReads(self, read_ids_order):

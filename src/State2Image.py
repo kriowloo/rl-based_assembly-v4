@@ -14,8 +14,9 @@ class State2Image:
     def getStateInfoForReads(self, reads):
         pass
 
-    def __init__(self, match, mismatch, gap, reads, max_read_len = None, number_of_reads = None, nucleotides_in_grayscale = True):
+    def __init__(self, match, mismatch, gap, reads, max_read_len = None, number_of_reads = None, nucleotides_in_grayscale = True, reward_system = 1):
         self.reads = reads
+        self.reward_system = reward_system
         self.number_of_reads = number_of_reads if number_of_reads is not None else len(reads)
         if max_read_len is None:
             for read in reads:
@@ -116,15 +117,17 @@ class State2Image:
             n_reads_of_state = next_state["row"] + 1
             factor = (n_reads_of_state - next_state["breaks"]) / n_reads_of_state
             next_state["pm"] = next_state["original_pm"] * factor
-            # next_state["reward"] = next_state["pm"]
-            if cur_read_id == -1:
-                next_state["reward"] = 0.1
-            elif next_state["breaks"] > 0:
-                next_state["reward"] = -0.1
+            if self.reward_system == 1:
+                next_state["reward"] = next_state["pm"]
             else:
-                next_state["reward"] = overlap_len * self.overlap_factor
-                if n_reads_of_state == self.number_of_reads:
-                    next_state["reward"] += 1
+                if cur_read_id == -1:
+                    next_state["reward"] = 0.1
+                elif next_state["breaks"] > 0:
+                    next_state["reward"] = -0.1
+                else:
+                    next_state["reward"] = overlap_len * self.overlap_factor
+                    if n_reads_of_state == self.number_of_reads:
+                        next_state["reward"] += 1
             # next_state["pm"] = 0.1 if n_reads_of_state != self.number_of_reads else next_state["original_pm"] * factor
             # next_state["pm"] = 0 if repeat else cur_state["pm"] + self.sw(cur_read_id, next_read_id)
             # next_state["pm"] *= 2 if next_state["row"] + 1 == self.number_of_reads and not repeat else 1

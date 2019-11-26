@@ -1,8 +1,8 @@
 from State2Image import State2Image
 
 class State2ForwardImages(State2Image):
-    def __init__(self, reads, max_read_len, match, mismatch, gap, n_reads, number_of_frames, nucleotides_in_grayscale):
-        super().__init__(match, mismatch, gap, reads, max_read_len, n_reads, nucleotides_in_grayscale)
+    def __init__(self, reads, max_read_len, match, mismatch, gap, n_reads, number_of_frames, nucleotides_in_grayscale, reward_system):
+        super().__init__(match, mismatch, gap, reads, max_read_len, n_reads, nucleotides_in_grayscale, reward_system)
         self.init = None
         self.number_of_frames = number_of_frames
 

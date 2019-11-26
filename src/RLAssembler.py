@@ -53,6 +53,7 @@ def _start(param_values, reads, n_reads, max_read_len):
     seed_value = param_values["seed"]
     seed_value = seed_value if seed_value >= 0 else random.randrange(2**32 - 1)
     nucleotides_in_grayscale = param_values["nucleotide_color"] == 1
+    reward_system = param_values["reward_system"]
 
     print("Setting up random seed to " + str(seed_value))
     random.seed(seed_value)
@@ -61,7 +62,7 @@ def _start(param_values, reads, n_reads, max_read_len):
 
     # create a converter able to represent each state as image(s)
     print("Creating state2image converter...")
-    ol = _getState2ImageConverter(stateversion, reads, max_read_len, swmatch, swmismatch, swgap, n_reads, nucleotides_in_grayscale)
+    ol = _getState2ImageConverter(stateversion, reads, max_read_len, swmatch, swmismatch, swgap, n_reads, nucleotides_in_grayscale, reward_system)
     frames_per_state = ol.countFramesPerState()
     # pm = ol._getCompressedImageAndInfoForReads([9,8,7,6,5,4,3,2,1])[1]["reward"]
     # pm = ol._getCompressedImageAndInfoForReads([9,0, 1, 3, 19, 20, 21, 27,8, 10, 23,29,22,25,11, 15, 17,2, 6, 7, 13, 14, 18,24, 26, 28,5,12, 16,4])[1]["reward"]
@@ -93,25 +94,25 @@ def _getEnvironment(ol, reads, n_reads, env_type):
     return None
 
 # return an instance of a converter to transform any state in a set of images
-def _getState2ImageConverter(sv, reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale):
+def _getState2ImageConverter(sv, reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system):
     if sv == 1:
-        return State2TwoImages(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
+        return State2TwoImages(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system)
     if sv == 2:
-        return State2LargerImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
+        return State2LargerImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system)
     if sv == 3:
-        return State2MergedImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
+        return State2MergedImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system)
     if sv == 4:
-        return State2RandomImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
+        return State2RandomImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system)
     if sv == 5:
-        return State2ForwardImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
+        return State2ForwardImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system)
     if sv == 6:
-        return State2HiddenForwardImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
+        return State2HiddenForwardImage(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system)
     if sv == 7:
-        return State2ThreeForwardImages(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale)
+        return State2ThreeForwardImages(reads, max_read_len, match, mismatch, gap, n_reads, nucleotides_in_grayscale, reward_system)
     return None
 
 # show how to use the software
-def printUsage(param_descriptions, required_params, param_tags, state_versions, env_types, pixel_norm_types, nucleotide_colors, default_values):
+def printUsage(param_descriptions, required_params, param_tags, state_versions, env_types, pixel_norm_types, nucleotide_colors, reward_systems, default_values):
     optional = {}
     print("Error to run RLAssembler.")
     print()
@@ -162,6 +163,16 @@ def printUsage(param_descriptions, required_params, param_tags, state_versions, 
     sorted_nucleotide_colors.sort()
     for key in sorted_nucleotide_colors:
         val = nucleotide_colors[key]
+        print("\t" + key + ": " + val + ";")
+
+    print()
+    print("Reward system corresponds to the type of reward the agent will use to learn. The following options are available:")
+    sorted_reward_systems = []
+    for key in reward_systems.keys():
+        sorted_reward_systems.append(key)
+    sorted_reward_systems.sort()
+    for key in sorted_reward_systems:
+        val = reward_systems[key]
         print("\t" + key + ": " + val + ";")
 
     print()
@@ -226,7 +237,7 @@ def _checkParam(tag, value):
             return None
         value = int(value)
         return value if value >= 1 and value <= 7 else None
-    if tag == "env_type" or tag == "nucleotide_color":
+    if tag == "env_type" or tag == "nucleotide_color" or tag == "reward_system":
         if not value.isdigit():
             return None
         value = int(value)
@@ -292,7 +303,8 @@ if __name__ == "__main__":
         "plot_fig_path" : "set the path of the output image file referring to the performance plot",
         "max_pm" : "set the maximum PM value to plot performance graph (non positive values disable plot production)",
         "seed" : "define random seed (set a negative value to pick a random seed automatically)",
-        "nucleotide_color": "define the color of nucleotides in read (1=nucleotides in different gray tones; 2=all nucleotides in black)"
+        "nucleotide_color": "define the color of nucleotides in read (1=nucleotides in different gray tones; 2=all nucleotides in black)",
+        "reward_system" : "define the reward system (see valid values below)"
     }
     # command-line parameters used to set up each parameter
     param_tags = {
@@ -315,7 +327,8 @@ if __name__ == "__main__":
         "-maxpm" : "max_pm",
         "-plotpath" : "plot_fig_path",
         "-rseed" : "seed",
-        "-nucleo" : "nucleotide_color"
+        "-nucleo" : "nucleotide_color",
+        "-reward" : "reward_system"
     }
     required_params = [
         "episodes",
@@ -340,7 +353,8 @@ if __name__ == "__main__":
         "plot_fig_path" : "output.png",
         "seed" : -1,
         "env_type" : 1,
-        "nucleotide_color" : 1
+        "nucleotide_color" : 1,
+        "reward_system" : 1
     }
     # available options to represent each state
     state_versions = {
@@ -365,11 +379,15 @@ if __name__ == "__main__":
       "1": "Reads are represented in grayscale",
       "2": "Reads are represented in black and white"
     }
+    reward_systems = {
+      "1": "Rewards use Smith-Waterman score",
+      "2": "Rewards use suffix-prefix score"
+    }
     # dict to store all param values
     param_values = {}
     reads, n_reads, max_read_len = _setParams(param_tags, required_params, param_values, default_values)
     if reads is None:
-        printUsage(param_descriptions, required_params, param_tags, state_versions, env_types, pixel_norm_types, nucleotide_colors, default_values)
+        printUsage(param_descriptions, required_params, param_tags, state_versions, env_types, pixel_norm_types, nucleotide_colors, reward_systems, default_values)
         sys.exit(1)
 
     _start(param_values, reads, n_reads, max_read_len)
